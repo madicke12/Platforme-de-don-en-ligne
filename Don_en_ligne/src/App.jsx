@@ -10,7 +10,7 @@ import Acceuil from './Page/acceuil';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Acceuil/>}>
-    <Route element={<Acceuil/>}/>
+   
   </Route>  
 ))
 
