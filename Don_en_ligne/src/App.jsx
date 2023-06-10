@@ -7,11 +7,26 @@ import {
 import './App.css'
 
 import Acceuil from './Page/acceuil';
+import Login, { loginLoader } from './Page/login';
+import Signin from './Components/Signin';
+import Home from './Page/home';
 
 const router=createBrowserRouter(createRoutesFromElements(
-  <Route path='/' element={<Acceuil/>}>
-   
-  </Route>  
+  <Route>
+    <Route path='/' element={<Acceuil/>}>
+      <Route index element={<Home/>}/>
+    </Route>
+    <Route
+      path='inscription/:type'
+      element={<Login/>}
+      loader={loginLoader}
+    />
+    <Route 
+      path='login'
+      element={<Signin/>}
+    />
+     
+  </Route>
 ))
 
 const App=()=> {

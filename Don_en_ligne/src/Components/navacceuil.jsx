@@ -13,7 +13,7 @@ const Navaccuil=()=> {
  
   return (
     <>
-      <header className=" bg-gray-200 shadow-md  sm:flex sm:justify-between">
+      <header className=" bg-gray-200 shadow-md  sm:flex sm:justify-between  w-full">
       <div className="  item-center flex  flex-shrink-0 justify-between">
         <div className="ml-4 p-1">
         <NavLink 
@@ -45,7 +45,7 @@ const Navaccuil=()=> {
                 </button>
             </NavLink>
             <NavLink 
-              to={''}
+              to={`inscription/${1}`}
               className={' rounded-sm no-underline'}
               
               >
@@ -55,7 +55,7 @@ const Navaccuil=()=> {
                 </button>
             </NavLink>
             <NavLink 
-              to={''}
+              to={`inscription/${2}`}
               className={' rounded-sm no-underline'}
               >
               <button 
