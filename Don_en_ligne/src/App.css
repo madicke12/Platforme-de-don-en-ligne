@@ -14,7 +14,8 @@
 .section1{
     height: 500px;
 }
-.dicke{
-    background-size: cover;
-    background-image: url('./assets/charity.png');
+
+.mainc{
+    background-image: cover;
+    background-image: url('./assets/t.png');
 }
