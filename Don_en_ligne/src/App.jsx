@@ -10,11 +10,14 @@ import Acceuil from './Page/acceuil';
 import Login, { loginLoader } from './Page/login';
 import Signin from './Components/Signin';
 import Home from './Page/home';
+import Mission from './Page/mission';
+import SignInSide from './Components/sidesign';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
     <Route path='/' element={<Acceuil/>}>
-      <Route index element={<Home/>}/>
+      <Route index element={<Mission/>}/>
+     
     </Route>
     <Route
       path='inscription/:type'

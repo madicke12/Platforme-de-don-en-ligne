@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import Navaccuil from "../Components/navacceuil";
+import Navbar from "../Components/navacceuil";
 
 const Acceuil =()=>{
     return(
         <>
-        <Navaccuil/>
+        <Navbar/>
         <Outlet/>
         </>
     )
