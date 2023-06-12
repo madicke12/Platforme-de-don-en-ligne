@@ -1,7 +1,7 @@
-import { Link, NavLink } from "react-router-dom";
+import {  NavLink } from "react-router-dom";
 import logo from "../assets/logo1.jpg";
 import { useState } from "react";
-import React from "react";
+
 
 const Navbar = () => {
   const [isopen, setIsopen] = useState(null);
@@ -11,7 +11,7 @@ const Navbar = () => {
       <div className=" mx-4 px-4">
         <div className="flex  justify-between h-16">
           <div className="flex items-center">
-            <NavLink to={"/"} className={"flex no-underline text-black"}>
+            <NavLink to={"/"}  className={`flex no-underline text-black `}>
               <img src={logo} alt="" className="rounded-full h-12  w-12 " />
               <span className="font-bold p-2 text-2xl">WALLU</span>
             </NavLink>

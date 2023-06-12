@@ -15,7 +15,14 @@
     height: 500px;
 }
 
-.mainc{
-    background-image: cover;
-    background-image: url('./assets/c.png');
+.image{
+    background-position: center;
+    background-size: cover;
+    background-image: url('./assets/enf.jpeg');
+}.images{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
+    background-image: url('https://www.africarivista.it/wp-content/uploads/2021/03/artoff9459-1.jpg');
 }

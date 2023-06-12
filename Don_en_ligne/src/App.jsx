@@ -11,7 +11,7 @@ import Login, { loginLoader } from './Page/login';
 import Signin from './Components/Signin';
 import Home from './Page/home';
 import Mission from './Page/mission';
-import SignInSide from './Components/sidesign';
+import Inscription from './Components/signup';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
@@ -19,14 +19,15 @@ const router=createBrowserRouter(createRoutesFromElements(
       <Route index element={<Mission/>}/>
      
     </Route>
-    <Route
-      path='inscription/:type'
-      element={<Login/>}
-      loader={loginLoader}
-    />
     <Route 
+      //loader={loginLoader}
       path='login'
       element={<Signin/>}
+    />
+       <Route 
+      //loader={loginLoader}
+      path='inscription'
+      element={<Inscription/>}
     />
      
   </Route>
