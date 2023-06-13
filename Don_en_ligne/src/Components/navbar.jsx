@@ -45,7 +45,7 @@ const Navbar = () => {
       <div
         className={`${
           isopen ? "block" : "hidden"
-        } sm:flex sm:flex-shrink-0 sm:mr-12 ml-9`}
+        } sm:flex sm:flex-shrink-0 sm:mr-12 `}
       >
         <NavLink
           to="/"
