@@ -15,12 +15,12 @@ const Signin = () => {
               <input
                 type="text"
                 placeholder="Email"
-                className=" rounded-lg bg-gray-300 outline-2 sm:outline-red-200  py-2 px-2 "
+                className=" rounded-lg bg-gray-300 outline-2 active:outline-red-200  py-2 px-2 "
               />
               <input
                 type="password"
                 placeholder="Mot de passe"
-                className="bg-gray-300 rounded-lg  outline-2 sm:outline-red-200  py-2 px-2 w-full"
+                className="bg-gray-300 rounded-lg  outline-2 active:outline-red-200  py-2 px-2 w-full"
               />
             </div>
 

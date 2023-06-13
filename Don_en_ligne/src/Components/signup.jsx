@@ -70,55 +70,55 @@ const Inscription = () => {
                 name='nom'
                 type="text"
                 placeholder="Nom"
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2   ${!Donor ? 'hidden' : ''  } `}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2   ${!Donor ? 'hidden' : ''  } `}
               />
               <input 
                 name="prenom"
                 type="text"
                 placeholder="Prenom"
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2  ${!Donor ? 'hidden' : '' }` }
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${!Donor ? 'hidden' : '' }` }
               />
               <input 
                 name="organisation"
                 type="text"
                 placeholder="Nom de votre organisation"
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 w-full ${Donor ? 'hidden' : '' }`}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 w-full ${Donor ? 'hidden' : '' }`}
               />
               <input
                 type="text"
                 placeholder="Email"
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 `}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 `}
               />
               <input
                 name="telephone"
                 type="number"
                 placeholder="Telephone"
-                className="border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 "
+                className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
               <input 
                 name="adresse"
                 type="text"
                 placeholder="adresse"
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2  ${Donor ? 'hidden' :'' }`}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${Donor ? 'hidden' :'' }`}
               />
               <input 
                 name="dateCreation"
                 type="date"
                 placeholder="Date de "
-                className={`border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 ${Donor ? 'hidden' : '' } `}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 ${Donor ? 'hidden' : '' } `}
               />
               
               <input
                 name="password"
                 type="password"
                 placeholder="Mot de passe"
-                className="border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 "
+                className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
               <input
                 name="confirmePassword"
                 type="password"
                 placeholder="confirmer mot de passe"
-                className="border rounded-lg outline-double outline-red-200 border-gray-400 py-1 px-2 "
+                className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
              
             </div>
