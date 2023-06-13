@@ -5,7 +5,7 @@ const Signin = () => {
     <div className="w-full flex min-h-screen">
       <div className="image w-3/5 hidden  sm:block "></div>
       <div className="flex items-center justify-center w-full   sm:w-3/5">
-        <div className="  w-full py-16 px-12">
+        <div className="  w-full py-3 px-3">
           <h2 className="text-3xl mb-4 text-center">Se connecter</h2>
           <p className="mb- text-center">Connectez vous en un instant !</p>
 
@@ -25,7 +25,7 @@ const Signin = () => {
             </div>
 
             <div className="mt-5">
-              <button className="w-full bg-red-300 py-3 text-center text-white">
+              <button className="w-full bg-red-300 py-3 text-center rounded-md text-white">
                 Se connecter
               </button>
             </div>

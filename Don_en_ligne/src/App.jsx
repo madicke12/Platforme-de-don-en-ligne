@@ -11,7 +11,7 @@ import Login, { loginLoader } from './Page/login';
 import Signin from './Components/Signin';
 import Home from './Page/home';
 import Mission from './Page/mission';
-import Inscription from './Components/signup';
+import Inscription, { action } from './Components/signup';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
@@ -28,6 +28,7 @@ const router=createBrowserRouter(createRoutesFromElements(
       //loader={loginLoader}
       path='inscription'
       element={<Inscription/>}
+      action={action}
     />
      
   </Route>

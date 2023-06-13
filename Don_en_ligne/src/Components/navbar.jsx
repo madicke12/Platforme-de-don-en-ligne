@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <header className="shadow-md sm:flex sm:justify-between items-center">
-      <div className="mx-4 px-4">
+      <div className="mx-2 px-4">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <NavLink to={"/"} className="flex no-underline text-black">
@@ -45,11 +45,11 @@ const Navbar = () => {
       <div
         className={`${
           isopen ? "block" : "hidden"
-        } sm:flex sm:flex-shrink-0 sm:mr-12 `}
+        } sm:flex sm:flex-shrink-0   `}
       >
         <NavLink
           to="/"
-          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
+          className="text-black  font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
           Accueil
         </NavLink>
