@@ -1,28 +1,28 @@
-import {  NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../assets/logo1.jpg";
 import { useState } from "react";
 
-
 const Navbar = () => {
-  const [isopen, setIsopen] = useState(null);
+  const [isopen, setIsopen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsopen(!isopen);
+  };
 
   return (
-    <header className={`shadow-md  sm:flex sm:justify-between items-center`}>
-      <div className=" mx-4 px-4">
-        <div className="flex  justify-between h-16">
+    <header className="shadow-md sm:flex sm:justify-between items-center">
+      <div className="mx-4 px-4">
+        <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <NavLink to={"/"}  className={`flex no-underline text-black `}>
-              <img src={logo} alt="" className="rounded-full h-12  w-12 " />
+            <NavLink to={"/"} className="flex no-underline text-black">
+              <img src={logo} alt="" className="rounded-full h-12 w-12" />
               <span className="font-bold p-2 text-2xl">WALLU</span>
             </NavLink>
           </div>
-          <button
-            onClick={() => setIsopen((prev) => !prev)}
-            className=" sm:hidden"
-          >
-            {isopen ? (
+          <button onClick={toggleMenu} className="sm:hidden">
+            {!isopen ? (
               <svg
-                className={`w-7 h-7 mr-3`}
+                className="w-7 h-7 mr-3"
                 xmlns="http://www.w3.org/2000/svg"
                 height="1em"
                 viewBox="0 0 448 512"
@@ -31,7 +31,7 @@ const Navbar = () => {
               </svg>
             ) : (
               <svg
-                className={`w-7 h-7 mr-3`}
+                className="w-7 h-7 mr-3"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 384 512"
               >
@@ -39,43 +39,39 @@ const Navbar = () => {
               </svg>
             )}
           </button>
-          
         </div>
-        
       </div>
-      
+
       <div
-        className={`sm:flex flex-shrink-0 sm:mr-12 ml-9 ${
-          isopen ? "hidden" : null
-        }`}
+        className={`${
+          isopen ? "block" : "hidden"
+        } sm:flex sm:flex-shrink-0 sm:mr-12 ml-9`}
       >
         <NavLink
           to="/"
-          className="text-black font-bold hover:shadow-lg  px-3 py-2 block rounded-md no-underline"
+          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
           Accueil
         </NavLink>
         <NavLink
           to="/projects"
-          className="text-black font-bold hover:shadow-lg  px-3 py-2 block rounded-md no-underline"
+          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
           Projets
         </NavLink>
         <NavLink
           to="/donate"
-          className="text-black font-bold hover:shadow-lg  px-3 py-2 block rounded-md no-underline"
+          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
           Faire un don
         </NavLink>
         <NavLink
           to="/login"
-          className="text-black font-bold hover:shadow-lg  px-3 py-2 block  rounded-md no-underline"
+          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
           Se connecter
         </NavLink>
-        
       </div>
-      
     </header>
   );
 };
