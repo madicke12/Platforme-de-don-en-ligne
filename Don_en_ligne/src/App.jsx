@@ -7,16 +7,18 @@ import {
 import './App.css'
 
 import Acceuil from './Page/acceuil';
-import Login, { loginLoader } from './Page/login';
+
 import Signin from './Components/Signin';
 import Home from './Page/home';
 import Mission from './Page/mission';
-import Inscription, { action } from './Components/signup';
+import Inscription, { action } from './Page/signup';
+import { AuthProvider } from './context/AuthContext';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
     <Route path='/' element={<Acceuil/>}>
-      <Route index element={<Mission/>}/>
+      <Route index element={<Home/>}/>
+      <Route path='about' element={<Mission/>}/>
      
     </Route>
     <Route 
@@ -32,11 +34,14 @@ const router=createBrowserRouter(createRoutesFromElements(
     />
      
   </Route>
+  
 ))
 
 const App=()=> {
   return (
-    <RouterProvider router={router}/>
-  )
+      <AuthProvider>
+        <RouterProvider router={router}/>
+      </AuthProvider>    
+    )
 }
 export default App

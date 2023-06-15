@@ -60,10 +60,10 @@ const Navbar = () => {
           Projets
         </NavLink>
         <NavLink
-          to="/donate"
+          to="/about"
           className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
         >
-          Faire un don
+          Notre Mission
         </NavLink>
         <NavLink
           to="/login"

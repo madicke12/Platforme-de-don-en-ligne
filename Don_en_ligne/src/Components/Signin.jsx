@@ -1,5 +1,4 @@
 import { Form, Link } from "react-router-dom";
-import image from "../assets/enf.jpeg";
 const Signin = () => {
   return (
     <div className="w-full flex min-h-screen">

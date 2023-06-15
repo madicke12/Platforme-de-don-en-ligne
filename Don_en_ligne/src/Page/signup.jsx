@@ -1,10 +1,16 @@
 import { useState } from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useActionData } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export async function action({ request }) {
   const formData = await request.formData();
   const type = formData.get("Donateur") ? "Donateur" : "Organisation";
-  console.log(type);
+  const user={
+    email : formData.email,
+    password: formData.password
+  }
+  return user
+  
   // try{
   //     const data = await loginUser({email , password})
   //     localStorage.setItem('loggedin',true)
@@ -16,12 +22,26 @@ export async function action({ request }) {
   //     return error.message
   // }
 
-  return null;
 }
 
 const Inscription = () => {
+  const User = useActionData()
+  console.log(User)
   const [Donor, setIsDonor] = useState(false);
   const [charity, setIsCharity] = useState(false);
+  const { signup} = useAuth()
+
+  async function logger(user){
+  try{
+   const resp = await signup(User.email ,User.password)
+  }catch(error){
+    alert(error)
+  }
+  }
+
+
+
+
   const handleDonorChange = (e) => {
     setIsDonor(e.target.checked);
     setIsCharity(false);
@@ -42,7 +62,9 @@ const Inscription = () => {
             Creer un compte wallu en un instant !
           </p>
 
-          <Form method="post" className={` p-4 `}>
+          <Form method="post" className={` p-4 `} onSubmit={async ()=>{
+            await logger(User)
+          }}>
             <div className="mb-3 flex ">
               <input
                 name="Donateur"
@@ -85,6 +107,7 @@ const Inscription = () => {
                 className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 w-full ${Donor ? 'hidden' : '' }`}
               />
               <input
+                name="email"
                 type="text"
                 placeholder="Email"
                 className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 `}
@@ -104,7 +127,7 @@ const Inscription = () => {
               <input 
                 name="dateCreation"
                 type="date"
-                placeholder="Date de "
+                placeholder="Date de creation "
                 className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 ${Donor ? 'hidden' : '' } `}
               />
               
@@ -124,7 +147,7 @@ const Inscription = () => {
             </div>
 
             <div className="mt-5">
-              <button className="w-full bg-red-300 p-2 text-center rounded-xl text-white">
+              <button className="w-full bg-red-300 py-3 text-center rounded-xl text-white">
                 S'inscrire
               </button>
             </div>
