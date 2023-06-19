@@ -13,7 +13,7 @@ export async function action({ request }) {
       organisation: Joi.string().min(3).required().max(30),
       adresse: Joi.string(),
       telephone: Joi.number().min(9),
-      Date_Creation: Joi.date().less("12-31-2023"),
+      Date_Creation: Joi.date().less("2023-12-31"),
       email: Joi.string().required(),
       type: Joi.string().required(),
       password: Joi.string().min(8).required(),
