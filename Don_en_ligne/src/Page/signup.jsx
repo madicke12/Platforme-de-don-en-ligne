@@ -139,6 +139,11 @@ const Inscription = () => {
               Organisation caritative
             </div>
             <div className="grid grid-cols-1 gap-3  ">
+            {error && (
+              <div className="mt-3 bg-red-100 text-red-900 text-sm text-center p-2 flex items-center justify-center">
+                <span>{error}</span>
+              </div>
+            )}
               <input
                 name="nom"
                 type="text"
@@ -212,11 +217,7 @@ const Inscription = () => {
               </button>
             </div>
 
-            {error && (
-              <div className="mt-3 bg-red-100 text-red-900 text-sm text-center p-2 flex items-center justify-center">
-                <span>{error}</span>
-              </div>
-            )}
+            
             <div className="mt-1">
               <span>
                 D'eja inscrit ?
