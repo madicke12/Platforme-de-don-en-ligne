@@ -12,7 +12,6 @@ import Signin from './Components/Signin';
 import Home from './Page/home';
 import Mission from './Page/mission';
 import Inscription, { action } from './Page/signup';
-import { AuthProvider } from './context/AuthContext';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
@@ -39,9 +38,8 @@ const router=createBrowserRouter(createRoutesFromElements(
 
 const App=()=> {
   return (
-      <AuthProvider>
+    
         <RouterProvider router={router}/>
-      </AuthProvider>    
     )
 }
 export default App

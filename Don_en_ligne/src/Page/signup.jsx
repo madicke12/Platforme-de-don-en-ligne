@@ -1,46 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Link, useActionData } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import axios from "axios";
+import "joi";
+import Joi, { string } from "joi";
 
 export async function action({ request }) {
   const formData = await request.formData();
   const type = formData.get("Donateur") ? "Donateur" : "Organisation";
-  const user={
-    email : formData.email,
-    password: formData.password
+
+  if (type === "Organisation") {
+    const schema = Joi.object({
+      organisation: Joi.string().min(3).required().max(30),
+      adresse: Joi.string(),
+      telephone: Joi.number().min(9),
+      Date_Creation: Joi.date().less("12-31-2023"),
+      email: Joi.string().required(),
+      type: Joi.string().required(),
+      password: Joi.string().min(8).required(),
+      confirm_password: Joi.ref("password"),
+    }).with("password", "confirm_password");
+
+    const data = {
+      organisation: formData.get("orga"),
+      adresse: formData.get("adresse"),
+      telephone: formData.get("telephone"),
+      Date_Creation: formData.get("dateCreation"),
+      email: formData.get("email"),
+      type: type,
+      password: formData.get("password"),
+      confirm_password: formData.get("confirmePassword"),
+    };
+
+    const result = await schema.validate(data);
+    if (result.error) {
+      return result.error.message;
+    } else {
+      return {
+        organisation: formData.get("orga"),
+        adresse: formData.get("adresse"),
+        telephone: formData.get("telephone"),
+        Date_Creation: formData.get("dateCreation"),
+        email: formData.get("email"),
+        type: type,
+        password: formData.get("password"),
+      };
+    }
   }
-  return user
-  
-  // try{
-  //     const data = await loginUser({email , password})
-  //     localStorage.setItem('loggedin',true)
-  //     window.location.href='/host'
-  //     console.log(data)
-  // }
-
-  // catch(error){
-  //     return error.message
-  // }
-
+  else {
+    const schema = Joi.object({
+      nom: Joi.string().min(3).required().max(30),
+      prenom: Joi.string().required().min(3),
+      email: Joi.string().required(),
+      telephone: Joi.number().min(9),
+      type: Joi.string().required(),
+      password: Joi.string().min(8).required(),
+      confirm_password: Joi.ref("password"),
+    }).with("password", "confirm_password");
+    const data = {
+      nom: formData.get("nom"),
+      prenom: formData.get("prenom"),
+      email: formData.get("email"),
+      telephone: formData.get("telephone"),
+      type: type,
+      password: formData.get("password"),
+      confirm_password: formData.get("confirmePassword"),
+    }
+    const result = await schema.validate(data)
+    if(result.error){
+      return result.error.message
+    } else{
+      return{
+        nom: formData.get("nom"),
+        prenom: formData.get("prenom"),
+        email: formData.get("email"),
+        telephone: formData.get("telephone"),
+        type: type,
+        password: formData.get("password")
+      }
+    }
+  }
 }
 
 const Inscription = () => {
-  const User = useActionData()
-  console.log(User)
+  const response = useActionData();
   const [Donor, setIsDonor] = useState(false);
   const [charity, setIsCharity] = useState(false);
-  const { signup} = useAuth()
-
-  async function logger(user){
-  try{
-   const resp = await signup(User.email ,User.password)
-  }catch(error){
-    alert(error)
-  }
-  }
-
-
-
+  const [error, setError] = useState();
 
   const handleDonorChange = (e) => {
     setIsDonor(e.target.checked);
@@ -52,6 +97,15 @@ const Inscription = () => {
     setIsDonor(false);
   };
 
+  useEffect(() => {
+    if (typeof response === "string") {
+      setError(response);
+    } else {
+      setError(null);
+    }
+  }, [response]);
+
+
   return (
     <div className="w-full flex min-h-screen">
       <div className="images w-3/5 hidden  sm:block "></div>
@@ -62,49 +116,52 @@ const Inscription = () => {
             Creer un compte wallu en un instant !
           </p>
 
-          <Form method="post" className={` p-4 `} onSubmit={async ()=>{
-            await logger(User)
-          }}>
+          <Form method="post" className={` p-4 `}>
             <div className="mb-3 flex ">
               <input
                 name="Donateur"
                 type="checkbox"
-                placeholder="Email"
-                className="border rounded-lg   "
-                checked={Donor}
+                className="border rounded-lg"
                 onChange={handleDonorChange}
+                checked={Donor}
                 value={Donor}
               />
               Donateur
               <input
-                name="organisation"
+                name="Organisation"
                 type="checkbox"
                 placeholder="Email"
                 className="border rounded-lg ml-2  "
-                checked={charity}
                 onChange={handleCharityChange}
+                checked={charity}
                 value={charity}
               />
               Organisation caritative
             </div>
             <div className="grid grid-cols-1 gap-3  ">
-              <input  
-                name='nom'
+              <input
+                name="nom"
                 type="text"
                 placeholder="Nom"
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2   ${!Donor ? 'hidden' : ''  } `}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2   ${
+                  !Donor ? "hidden" : ""
+                } `}
               />
-              <input 
+              <input
                 name="prenom"
                 type="text"
                 placeholder="Prenom"
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${!Donor ? 'hidden' : '' }` }
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${
+                  !Donor ? "hidden" : ""
+                }`}
               />
-              <input 
-                name="organisation"
+              <input
+                name="orga"
                 type="text"
                 placeholder="Nom de votre organisation"
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 w-full ${Donor ? 'hidden' : '' }`}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 w-full ${
+                  Donor ? "hidden" : ""
+                }`}
               />
               <input
                 name="email"
@@ -118,19 +175,23 @@ const Inscription = () => {
                 placeholder="Telephone"
                 className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
-              <input 
+              <input
                 name="adresse"
                 type="text"
                 placeholder="adresse"
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${Donor ? 'hidden' :'' }`}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${
+                  Donor ? "hidden" : ""
+                }`}
               />
-              <input 
+              <input
                 name="dateCreation"
                 type="date"
                 placeholder="Date de creation "
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 ${Donor ? 'hidden' : '' } `}
+                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 ${
+                  Donor ? "hidden" : ""
+                } `}
               />
-              
+
               <input
                 name="password"
                 type="password"
@@ -143,7 +204,6 @@ const Inscription = () => {
                 placeholder="confirmer mot de passe"
                 className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
-             
             </div>
 
             <div className="mt-5">
@@ -151,6 +211,12 @@ const Inscription = () => {
                 S'inscrire
               </button>
             </div>
+
+            {error && (
+              <div className="mt-3 bg-red-100 text-red-900 text-sm text-center p-2 flex items-center justify-center">
+                <span>{error}</span>
+              </div>
+            )}
             <div className="mt-1">
               <span>
                 D'eja inscrit ?
