@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { Form, Link, useActionData } from "react-router-dom";
 import axios from "axios";
 import "joi";
-import Joi, { string } from "joi";
+import Joi   from "joi";
 
 export async function action({ request }) {
   const formData = await request.formData();
-  const type = formData.get("Donateur") ? "Donateur" : "Organisation";
+  const type= formData.get("Donateur") ? 'Donateur' : 'Organisation'
 
-  if (type === "Organisation") {
+
+
+  if (type === 'Organisation') {
     const schema = Joi.object({
       organisation: Joi.string().min(3).required().max(30),
-      adresse: Joi.string(),
       telephone: Joi.number().min(9),
-      Date_Creation: Joi.date().less("2023-12-31"),
       email: Joi.string().required(),
       type: Joi.string().required(),
       password: Joi.string().min(8).required(),
@@ -22,11 +22,9 @@ export async function action({ request }) {
 
     const data = {
       organisation: formData.get("orga"),
-      adresse: formData.get("adresse"),
       telephone: formData.get("telephone"),
-      Date_Creation: formData.get("dateCreation"),
       email: formData.get("email"),
-      type: type,
+      type: 'Organisation',
       password: formData.get("password"),
       confirm_password: formData.get("confirmePassword"),
     };
@@ -35,18 +33,16 @@ export async function action({ request }) {
     if (result.error) {
       return result.error.message;
     } else {
-      return {
-        organisation: formData.get("orga"),
-        adresse: formData.get("adresse"),
-        telephone: formData.get("telephone"),
-        Date_Creation: formData.get("dateCreation"),
-        email: formData.get("email"),
-        type: type,
-        password: formData.get("password"),
-      };
+       await sendFormDataToServer({ 
+      organisation: formData.get("orga"),
+      telephone: formData.get("telephone"),
+      email: formData.get("email"),
+      type: 'Organisation',
+      password: formData.get("password")})
+      return null
     }
   }
-  else {
+  else if(formData.get("Donateur")){
     const schema = Joi.object({
       nom: Joi.string().min(3).required().max(30),
       prenom: Joi.string().required().min(3),
@@ -61,7 +57,7 @@ export async function action({ request }) {
       prenom: formData.get("prenom"),
       email: formData.get("email"),
       telephone: formData.get("telephone"),
-      type: type,
+      type:formData.get('Donateur'),
       password: formData.get("password"),
       confirm_password: formData.get("confirmePassword"),
     }
@@ -69,15 +65,26 @@ export async function action({ request }) {
     if(result.error){
       return result.error.message
     } else{
-      return{
+      await sendFormDataToServer({
         nom: formData.get("nom"),
         prenom: formData.get("prenom"),
         email: formData.get("email"),
         telephone: formData.get("telephone"),
-        type: type,
+        type:formData.get('Donateur'),
         password: formData.get("password")
-      }
+      })
+      return null
+  
     }
+  }
+}
+
+async function sendFormDataToServer(data) {
+  try {
+    const res = await axios.post("http://localhost:8000/register", data, { withCredentials: true });
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -86,25 +93,41 @@ const Inscription = () => {
   const [Donor, setIsDonor] = useState(false);
   const [charity, setIsCharity] = useState(false);
   const [error, setError] = useState();
-
-  const handleDonorChange = (e) => {
-    setIsDonor(e.target.checked);
+  console.log(Donor)
+  console.log(charity)
+  console.log(response)
+  const handleDonorChange = () => {
+    setIsDonor(true);
     setIsCharity(false);
   };
 
-  const handleCharityChange = (e) => {
-    setIsCharity(e.target.checked);
+  const handleCharityChange = () => {
+    setIsCharity(true);
     setIsDonor(false);
   };
 
   useEffect(() => {
-    if (typeof response === "string") {
+    if (typeof (response) === "string") {
       setError(response);
     } else {
-      setError(null);
+      setError(null);   
     }
   }, [response]);
 
+
+  // const logger = async () => {
+  //   try {
+  //     const res = await axios.post("http://localhost:8000/register", response, { withCredentials: true });
+  //     console.log(res.data); 
+  //   } catch (error) {
+  //     console.error(error); 
+  //   }
+  // };
+  
+  
+
+
+  
 
   return (
     <div className="w-full flex min-h-screen">
@@ -116,7 +139,7 @@ const Inscription = () => {
             Creer un compte wallu en un instant !
           </p>
 
-          <Form method="post" className={` p-4 `}>
+          <Form method="post" className={` p-4 `} >
             <div className="mb-3 flex ">
               <input
                 name="Donateur"
@@ -181,23 +204,6 @@ const Inscription = () => {
                 className="border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 "
               />
               <input
-                name="adresse"
-                type="text"
-                placeholder="adresse"
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2  ${
-                  Donor ? "hidden" : ""
-                }`}
-              />
-              <input
-                name="dateCreation"
-                type="date"
-                placeholder="Date de creation "
-                className={`border rounded-lg bg-gray-300 outline-2 active:outline-red-200 py-2 px-2 ${
-                  Donor ? "hidden" : ""
-                } `}
-              />
-
-              <input
                 name="password"
                 type="password"
                 placeholder="Mot de passe"
@@ -212,7 +218,7 @@ const Inscription = () => {
             </div>
 
             <div className="mt-5">
-              <button className="w-full bg-red-300 py-3 text-center rounded-xl text-white">
+              <button className="w-full bg-red-300 py-3 text-center rounded-xl text-white" >
                 S'inscrire
               </button>
             </div>

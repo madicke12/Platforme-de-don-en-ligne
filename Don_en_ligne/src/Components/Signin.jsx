@@ -1,5 +1,50 @@
 import { Form, Link } from "react-router-dom";
+import Joi from "joi";
+import axios from "axios";
+import { useActionData } from "react-router-dom";
+import { useState , useEffect} from "react";
+
+
+export const action = async ({request})=>{
+  const formData = await request.formData();
+  const schema = Joi.object({
+    username: Joi.string().required(),
+    password :Joi.string().required()
+  })
+const data = {
+  username : formData.get('username'),
+  password : formData.get('password')
+}
+
+const result = await schema.validate(data)
+if(result.error){
+  return result.error.message
+}
+else{
+  sendFormDataToServer(data)
+  return null
+}
+
+async function sendFormDataToServer(data) {
+  try {
+    const res = await axios.post("http://localhost:8000/login", data, { withCredentials: true });
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+}
 const Signin = () => {
+  const response = useActionData();
+  const [error, setError] = useState();
+  useEffect(() => {
+    if (typeof (response) === "string") {
+      setError(response);
+    } else {
+      setError(null);   
+    }
+  }, [response]);
+
   return (
     <div className="w-full flex min-h-screen">
       <div className="image w-3/5 hidden  sm:block "></div>
@@ -8,15 +53,21 @@ const Signin = () => {
           <h2 className="text-3xl mb-4 text-center">Se connecter</h2>
           <p className="mb- text-center">Connectez vous en un instant !</p>
 
-          <Form methode="post" className={` p-4 `}>
+          <Form method="post" className={` p-4 `}>
 
             <div className="grid grid-cols-1 gap-3  ">
+            {error && (
+              <div className="mt-3 bg-red-100 text-red-900 text-sm text-center p-2 flex items-center justify-center">
+                <span>{error}</span>
+              </div>)}
               <input
+                name='username'
                 type="text"
                 placeholder="Email"
                 className=" rounded-lg bg-gray-300 outline-2 active:outline-red-200  py-2 px-2 "
               />
               <input
+                name='password'
                 type="password"
                 placeholder="Mot de passe"
                 className="bg-gray-300 rounded-lg  outline-2 active:outline-red-200  py-2 px-2 w-full"

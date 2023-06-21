@@ -8,10 +8,10 @@ import './App.css'
 
 import Acceuil from './Page/acceuil';
 
-import Signin from './Components/Signin';
+import Signin ,{action as Signin_action} from './Components/Signin';
 import Home from './Page/home';
 import Mission from './Page/mission';
-import Inscription, { action } from './Page/signup';
+import Inscription, { action  } from './Page/signup';
 
 const router=createBrowserRouter(createRoutesFromElements(
   <Route>
@@ -24,6 +24,8 @@ const router=createBrowserRouter(createRoutesFromElements(
       //loader={loginLoader}
       path='login'
       element={<Signin/>}
+      action={Signin_action}
+
     />
        <Route 
       //loader={loginLoader}

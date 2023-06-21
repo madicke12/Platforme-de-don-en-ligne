@@ -5,11 +5,17 @@ import passportLocal from "passport-local";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import bodyParser from "body-parser";
-import { collection, addDoc } from "firebase/firestore";
-import { database } from "./firebase.js";
-
 import session from "express-session";
+import mongoose from "mongoose";
+import { Organisation } from "./user.js";
+import { donateur } from "./user.js";
+import { myfunction } from "./passport.js";
 
+const pass = process.env["Mongo_password"]
+console.log(pass)
+
+
+mongoose.connect(`mongodb+srv://madicke:${encodeURIComponent(pass)}@cluster0.mdhqca8.mongodb.net/?retryWrites=true&w=majority`)
 const app = express();
 
 app.use(bodyParser.json());
@@ -30,45 +36,78 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session())
+myfunction(passport)
+
 //route
 app.post("/register", async (req, res) => {
-  if (req.body.type === "Organisation") {
-    try {
-      const docRef = await addDoc(collection(database, "Organisations"), {
-        Nom_organisation: req.body.organisation,
-        Email: req.body.email,
+if (req.body.type === 'Organisation'){
+  try {
+    const result = await Organisation.findOne({ username: req.body.email, telephone: req.body.telephone });
+    if (result) {
+      res.send("User already registered");
+    } else {
+      const newOrga = new Organisation({
+        nom_organisation: req.body.organisation,
+        username: req.body.email,
         telephone: req.body.telephone,
-        adresse: req.body.adresse,
-        Date_Creation: req.body.Date_Creation,
-        type: req.body.type,
-        password: req.body.password,
+        password: await bcrypt.hash(req.body.password,10)
       });
-      console.log("User ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+  
+      const resp = await newOrga.save();
+      console.log(resp);
+      res.send("User registered successfully");
     }
-  } else{
-    try {
-      const docRef = await addDoc(collection(database, "Donateur"), {
-        Nom: req.body.Nom,
-        Prenom: req.body.Prenom,
-        Email: req.body.email,
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }}
+  else {
+    try{
+      const result = await donateur.findOne({username : req.body.email , telephone : req.body.telephone})
+    if(result){
+      res.send('user already exist');
+    }else{
+      const newDonateur = new donateur({
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        username: req.body.email,
         telephone: req.body.telephone,
-        type: req.body.type,
-        password: req.body.password,
+        password : await bcrypt.hash(req.body.password,10)
+
       });
-      console.log("User ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+      const resp = await newDonateur.save();
+      console.log(resp)
+      res.send('user successfully registred')
     }
+    }catch(err){
+      throw err
+    }
+    
   }
+  
+    
+  });
 
-  // console.log(req.body)
-});
-
-app.post("/login", (req, res) => {
-  console.log(req.body);
-});
+  app.post("/login", (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) {
+        throw err;
+      }
+      if (!user) {
+        res.send("user not found");
+      } else {
+        req.logIn(user, err => {
+          if (err) {
+            throw err;
+          }
+          res.send('successfully authenticated');
+        });
+      }
+    })(req, res, next);
+  });
+  
 
 app.listen(8000, () => {
   console.log("server started");
