@@ -39,6 +39,13 @@ export async function action({ request }) {
       email: formData.get("email"),
       type: 'Organisation',
       password: formData.get("password")})
+      const data = {
+        username : formData.get('email'),
+        password : formData.get('password')
+      }
+      localStorage.setItem('nom' ,formData.get('orga'))
+
+      await logUserIn(data)
       return null
     }
   }
@@ -73,16 +80,28 @@ export async function action({ request }) {
         type:formData.get('Donateur'),
         password: formData.get("password")
       })
+      
       return null
   
     }
   }
 }
 
+async function logUserIn(data){
+  try{
+    const res = await axios.post('http://localhost:8000/login',data,{withCredentials:true})
+    console.log(res)
+    window.location.href='/validation'
+  }catch(Err){
+    console.log(Err)
+  }
+}
 async function sendFormDataToServer(data) {
   try {
     const res = await axios.post("http://localhost:8000/register", data, { withCredentials: true });
     console.log(res.data);
+   
+
   } catch (error) {
     console.log(error);
   }

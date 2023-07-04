@@ -8,11 +8,16 @@ import axios from 'axios';
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [usertype ,setType]= useState();
-
-  const type = localStorage.getItem('user').replace(/"/g, '') === 'organisation' ? 'organisation' : 'donateur'
+  const [username ,setUserName] = useState()
+const type = localStorage.getItem('userType').replace(/"/g, '') === 'organisation' ? 'organisation' : 'donateur'
+const nom = localStorage.getItem('nom').replace(/"/g, '')
 useEffect(()=>{
   setType(type)
 },[type])
+
+useEffect(()=>{
+  setUserName(nom)
+},[nom])
 
 
 
@@ -36,7 +41,7 @@ useEffect(()=>{
           src={logo}
           alt="Profile"
         />
-        <span className="ml-2 text-gray-800">John Doe</span>
+        <span className="ml-2 text-gray-800">{nom}</span>
       </button>
 
       {isOpen && (

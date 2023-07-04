@@ -1,11 +1,30 @@
 
   
    
-  import React, { useState } from 'react';
-  import { FaArrowLeft } from 'react-icons/fa';
-  import './App.css';
+  import  { useState } from 'react';
+  import logo from '../assets/logo.jpeg'
+  import {Form} from 'react-router-dom'
+import axios from 'axios';
 
-  import logo from './logo.jpeg';
+
+
+export const action = async ({request})=>{
+  const formData = await request.formData();
+  try{
+    const result = await axios.post('http://localhost:8000/uploads',formData ,{withCredentials:true})
+    console.log(result)
+    window.location.href='/profil/organisation'
+  }catch(err){
+    console.log(err)
+  }
+  return null
+
+}
+
+
+
+
+
   
   const ValidationForm = () => {
     const [description, setDescription] = useState('');
@@ -13,16 +32,11 @@
     const [address, setAddress] = useState('');
     const [website, setWebsite] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [statusFile, setStatusFile] = useState<string>('');
-const [receiptFile, setReceiptFile] = useState<string>('');
+    const [statusFile, setStatusFile] = useState('');
+    const [receiptFile, setReceiptFile] = useState('');
 
-    // ...
   
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      // ...
-    };
-  
+ 
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="bg-white rounded shadow-md p-6">
@@ -33,16 +47,15 @@ const [receiptFile, setReceiptFile] = useState<string>('');
             <h2 className="text-2xl text-rose-300 font-bold">Faisons un peu plus connaissance ! </h2>
           </div>
   
-          <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
-            {/* ... autres champs du formulaire de validation ... */}
+          <Form method='post'  className="max-w-lg mx-auto" encType='multipart/form-data'>
   
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-                Description de l'organisation
+                Description de l'organisation (breve description)
               </label>
               <textarea
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="description"
+                name="description"
                 placeholder="Description de l'organisation"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -57,7 +70,7 @@ const [receiptFile, setReceiptFile] = useState<string>('');
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="address"
+              name="address"
               type="text"
               placeholder="Adresse"
               value={address}
@@ -65,29 +78,14 @@ const [receiptFile, setReceiptFile] = useState<string>('');
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="website">
-            Quel est le site web de votre organisation ?
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="website"
-              type="url"
-              placeholder="Site web"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-            />
-          </div>
-
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneNumber">
             Quel est le n° de téléphone de votre organisation ?
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phoneNumber"
-              type="tel"
+              name="phoneNumber"
+              type='tel'
               placeholder="Numéro de téléphone"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
@@ -102,8 +100,7 @@ const [receiptFile, setReceiptFile] = useState<string>('');
   </p>
   <input
     type="file"
-    id="statusFile"
-    name="statusFile"
+    name="receiptFile"
     accept=".pdf,.jpeg,.jpg,.png"
     onChange={(e) => setStatusFile(e.target.files?.[0]?.name || '')}
   required
@@ -119,7 +116,6 @@ const [receiptFile, setReceiptFile] = useState<string>('');
   </p>
   <input
     type="file"
-    id="receiptFile"
     name="receiptFile"
     accept=".pdf,.jpeg,.jpg,.png"
     onChange={(e) => setReceiptFile(e.target.files?.[0]?.name || '')}
@@ -127,22 +123,15 @@ const [receiptFile, setReceiptFile] = useState<string>('');
   />
 </div>
   
-            <div className="flex justify-between">
-            <button
-            className="bg-rose-300 hover:bg-gray-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-          >
-            <FaArrowLeft className="inline-block mr-1  " />
-            Retour
-          </button>
+          
+  
               <button
-                className="bg-rose-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-red-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Soumettre
               </button>
-            </div>
-          </form>
+          </Form>
         </div>
       </div>
     );

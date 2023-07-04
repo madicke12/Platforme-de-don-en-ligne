@@ -32,6 +32,12 @@ else{
     });
     if (user.data) {
       localStorage.setItem("userType" ,user.data.type)
+      if(user.data.type === 'organisation'){
+        localStorage.setItem('nom' ,user.data.nom_organisation)
+      }
+      else{
+        localStorage.setItem('nom' ,user.data.nom)
+      }
     }
   } catch (err) {
     console.log(err);
@@ -69,6 +75,7 @@ const Signin = () => {
       setError(response);
     } else {
       setError(null);   
+      
     }
   }, [response]);
 

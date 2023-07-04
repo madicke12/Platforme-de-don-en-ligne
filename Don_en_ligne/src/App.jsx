@@ -17,8 +17,9 @@ import { loader as navLoader } from "./Components/navbar";
 import ProfilePage ,{loader as l} from "./Components/profilDonateur";
 import OrganisationProfilePage from "./Components/profilorga";
 import CreerProjetOrga from "./Components/CreerProjetOrga";
-import Dashboard from "./Components/dashboard";
-
+import Dashboard, { DashboardLoader } from "./Components/dashboard";
+import ValidationForm from "./Components/formulaire";
+import { action as validationAction} from "./Components/formulaire";
 
 
 
@@ -26,6 +27,8 @@ import Dashboard from "./Components/dashboard";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
+        <Route action={validationAction} path="validation" element={<ValidationForm/>}/>
+
       <Route loader={navLoader} path="/" element={<Acceuil />}>
         <Route index element={<Home />} />
         <Route path="about" element={<Mission />} />
@@ -35,11 +38,11 @@ const router = createBrowserRouter(
           element={<ProfilePage />}
         />
         <Route
-          loader={l}
+     
           path="profil/organisation"
           element={<OrganisationProfilePage />}
         >
-        <Route  index element={<Dashboard/>}/>
+        <Route loader={DashboardLoader} index element={<Dashboard/>}/>
         <Route  path="projet" element={<h1>j</h1>}/>
         <Route  path="creer" element={<CreerProjetOrga/>}/>
         </Route>
