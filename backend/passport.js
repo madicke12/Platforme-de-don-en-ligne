@@ -13,10 +13,6 @@ export function myfunction(passport) {
                 username: username,
               });
               if (orgaResult) {
-                console.log(await bcrypt.compare(
-                    password,
-                    orgaResult.password 
-                  ))
                 try {
                   const response = await bcrypt.compare(
                     password,
@@ -51,17 +47,36 @@ export function myfunction(passport) {
             }
           })
         );
-  
-  passport.serializeUser((user ,cb)=>{
-    cb(null ,user.id)
-  })
-
-  passport.deserializeUser(async (id,cb)=>{
-
-     await user.findOne({_id : id} ,(err,user)=>{
-        cb(err ,user)        
-     });
- 
+        passport.serializeUser((user, callback) => {
+            callback(null, user.id);
+          });
         
-  })
+          passport.deserializeUser(async (id, cb) => {
+            try {
+              const organisation = await Organisation.findOne({ _id: id });
+              if (organisation) {
+                cb(null, organisation);
+              } else {
+                const Donateur = await donateur.findOne({ _id: id });
+                cb(null, Donateur);
+              }
+            } catch (err) {
+              cb(err, null);
+            }
+          });
 }
+       
+        
+        
+        
+        
+        
+        
+        
+  
+  
+  
+  
+  
+  
+

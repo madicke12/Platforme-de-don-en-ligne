@@ -12,7 +12,6 @@ import { donateur } from "./user.js";
 import { myfunction } from "./passport.js";
 
 const pass = process.env["Mongo_password"]
-console.log(pass)
 
 
 mongoose.connect(`mongodb+srv://madicke:${encodeURIComponent(pass)}@cluster0.mdhqca8.mongodb.net/?retryWrites=true&w=majority`)
@@ -27,14 +26,15 @@ app.use(
   })
 );
 
-app.use(cookieParser("secret"));
 app.use(
   session({
     secret: "secret code",
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: true
   })
 );
+app.use(cookieParser("secret"));
+
 
 app.use(passport.initialize());
 app.use(passport.session())
@@ -52,7 +52,8 @@ if (req.body.type === 'Organisation'){
         nom_organisation: req.body.organisation,
         username: req.body.email,
         telephone: req.body.telephone,
-        password: await bcrypt.hash(req.body.password,10)
+        password: await bcrypt.hash(req.body.password,10),
+        type: "organisation"
       });
   
       const resp = await newOrga.save();
@@ -74,7 +75,8 @@ if (req.body.type === 'Organisation'){
         prenom: req.body.prenom,
         username: req.body.email,
         telephone: req.body.telephone,
-        password : await bcrypt.hash(req.body.password,10)
+        password : await bcrypt.hash(req.body.password,10),
+        type:'donateur'
 
       });
       const resp = await newDonateur.save();
@@ -96,19 +98,50 @@ if (req.body.type === 'Organisation'){
         throw err;
       }
       if (!user) {
-        res.send("user not found");
+        res.send({
+          message:'Email or password incorrect',
+          status: false
+        });
       } else {
         req.logIn(user, err => {
           if (err) {
             throw err;
           }
-          res.send('successfully authenticated');
+          res.send({
+            connected: true
+          });
         });
-      }
+      
+  }
     })(req, res, next);
   });
   
+  app.get("/user", (req, res) => {
+    if (req.isAuthenticated()) {
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  });
 
+  app.get('/logout', (req, res) => {
+    req.logout(()=>{
+      res.send('successfuly logged out')
+    });
+  });
+
+  app.get('/getUser',(req,res)=>{
+    if(req.isAuthenticated()){
+      res.send(req.user)
+    }
+    else{
+      res.send('login first')
+    }
+  })
+  
+  
+  
+  
 app.listen(8000, () => {
   console.log("server started");
 });

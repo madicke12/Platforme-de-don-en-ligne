@@ -1,8 +1,26 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLoaderData } from "react-router-dom";
 import logo from "../assets/logo1.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ProfileDropdown from "./profil";
 
-const Navbar = () => {
+
+export const loader = async ()=>{
+
+    const user = await axios.get('http://localhost:8000/user' , {withCredentials: true})
+    //console.log(user)
+    return user
+  }
+
+const Navbar =  () => {
+ 
+  const state = useLoaderData()
+  const [ etat,setEtat] = useState()
+  useEffect(()=>{
+    setEtat(state.data)
+  },[state])
+  //console.log(state)
+  
   const [isopen, setIsopen] = useState(false);
 
   const toggleMenu = () => {
@@ -45,7 +63,7 @@ const Navbar = () => {
       <div
         className={`${
           isopen ? "block" : "hidden"
-        } sm:flex sm:flex-shrink-0   `}
+        } sm:flex sm:flex-shrink-0  mr-4 `}
       >
         <NavLink
           to="/"
@@ -67,9 +85,12 @@ const Navbar = () => {
         </NavLink>
         <NavLink
           to="/login"
-          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
+          className= {`text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline ${etat ? 'hidden' : ''}`}
         >
-          Se connecter
+         Se connecter
+        </NavLink>
+        <NavLink to={'#'} className={`bg-gray-300 border-2 border-gray-400  px-3 py-2 block rounded-md no-underline ${etat ? '' : 'hidden'}`}>
+          <ProfileDropdown/>
         </NavLink>
       </div>
     </header>

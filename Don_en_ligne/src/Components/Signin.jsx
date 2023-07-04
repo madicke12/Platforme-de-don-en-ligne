@@ -5,6 +5,9 @@ import { useActionData } from "react-router-dom";
 import { useState , useEffect} from "react";
 
 
+
+
+
 export const action = async ({request})=>{
   const formData = await request.formData();
   const schema = Joi.object({
@@ -21,20 +24,44 @@ if(result.error){
   return result.error.message
 }
 else{
-  sendFormDataToServer(data)
-  return null
-}
+ const reponse=  await sendFormDataToServer(data)
+ if(reponse.data.connected) {
+  try {
+    const user = await axios.get("http://localhost:8000/getUser", {
+      withCredentials: true,
+    });
+    if (user.data) {
+      localStorage.setItem("userType" ,user.data.type)
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  window.location.href='/'
+  console.log(reponse.data.connected)
+   return null}
+ if( ! reponse.data.status){
+   return reponse.data.message
+ }
 
+
+
+
+}}
 async function sendFormDataToServer(data) {
   try {
     const res = await axios.post("http://localhost:8000/login", data, { withCredentials: true });
-    console.log(res.data);
+    return res
   } catch (error) {
     console.log(error);
   }
 }
-}
+
 const Signin = () => {
+
+
+
+
+
   const response = useActionData();
   const [error, setError] = useState();
   useEffect(() => {
