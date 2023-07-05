@@ -20,6 +20,7 @@ import CreerProjetOrga from "./Components/CreerProjetOrga";
 import Dashboard, { DashboardLoader } from "./Components/dashboard";
 import ValidationForm from "./Components/formulaire";
 import { action as validationAction} from "./Components/formulaire";
+import { action as creeraction } from "./Components/CreerProjetOrga";
 
 
 
@@ -44,7 +45,7 @@ const router = createBrowserRouter(
         >
         <Route loader={DashboardLoader} index element={<Dashboard/>}/>
         <Route  path="projet" element={<h1>j</h1>}/>
-        <Route  path="creer" element={<CreerProjetOrga/>}/>
+        <Route action={creeraction} path="creer" element={<CreerProjetOrga/>}/>
         </Route>
       </Route>
       <Route path="login" element={<Signin />} action={Signin_action} />

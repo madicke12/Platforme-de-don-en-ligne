@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const organisationSchema = new mongoose.Schema({
   nom_organisation: String,
@@ -40,7 +40,17 @@ const demandeValidationSchema = new mongoose.Schema({
   file2 : String
 })
 
-export const demande = mongoose.model("demande",demandeValidationSchema)
+const projetSchema = new mongoose.Schema({
+  owner :String,
+  nom:String,
+  image: String,
+  description : String,
+  montant : Number
+})
+
+export const Demande = mongoose.model("demande",demandeValidationSchema)
 export const User = mongoose.model("User", userSchema);
 export const Organisation = mongoose.model("Organisation", organisationSchema);
-export const donateur = mongoose.model("donateur", donateurSchema);
+export const Donateur = mongoose.model("donateur", donateurSchema);
+//export const dont = mongoose.model('dont',dontSchema)
+export const Projet = mongoose.model('projet',projetSchema)

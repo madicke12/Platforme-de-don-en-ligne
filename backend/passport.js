@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
-import {  donateur } from "./user.js";
+import {  Donateur } from "./schema.js";
 import { Strategy } from "passport-local";
-import { Organisation } from "./user.js";
+import { Organisation } from "./schema.js";
 import { response } from "express";
 
 export function myfunction(passport) {
