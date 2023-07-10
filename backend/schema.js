@@ -45,8 +45,11 @@ const projetSchema = new mongoose.Schema({
   nom:String,
   image: String,
   description : String,
-  montant : Number
+  categorie:String,
+  montant : String
 })
+
+
 
 export const Demande = mongoose.model("demande",demandeValidationSchema)
 export const User = mongoose.model("User", userSchema);

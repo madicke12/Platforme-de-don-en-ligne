@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import {  Donateur } from "./schema.js";
 import { Strategy } from "passport-local";
 import { Organisation } from "./schema.js";
-import { response } from "express";
 
 export function myfunction(passport) {
 
@@ -14,7 +13,7 @@ export function myfunction(passport) {
               });
               if (orgaResult) {
                 try {
-                  const response = await bcrypt.compare(
+                  const response = bcrypt.compare(
                     password,
                     orgaResult.password 
                   );
@@ -24,12 +23,12 @@ export function myfunction(passport) {
                   throw err;
                 }
               } else {
-                const donateurResult = await donateur.findOne({
+                const donateurResult = await Donateur.findOne({
                   username: username,
                 });
                 if (donateurResult) {
                   try {
-                    const response = await bcrypt.compare(
+                    const response =  bcrypt.compare(
                       password,
                       donateurResult.password 
                     );
@@ -57,8 +56,8 @@ export function myfunction(passport) {
               if (organisation) {
                 cb(null, organisation);
               } else {
-                const Donateur = await donateur.findOne({ _id: id });
-                cb(null, Donateur);
+                const donateur = await Donateur.findOne({ _id: id });
+                cb(null, donateur);
               }
             } catch (err) {
               cb(err, null);

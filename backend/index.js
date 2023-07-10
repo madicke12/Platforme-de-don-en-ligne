@@ -9,22 +9,18 @@ import mongoose from "mongoose";
 import { Organisation, Projet } from "./schema.js";
 import { Donateur } from "./schema.js";
 import { myfunction } from "./passport.js";
-import multer from "multer";
-import path from "path";
 import { Demande } from "./schema.js";
 
 const pass = process.env["Mongo_password"];
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "files");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "../Don_en_ligne/src/assets");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
 
 mongoose
   .connect(
@@ -32,12 +28,11 @@ mongoose
       pass
     )}@cluster0.mdhqca8.mongodb.net/?retryWrites=true&w=majority`
   )
-  .then(() => {
-    console.log("MongoDB connected");
-  })
+  .then(() => console.log("MongoDB Connected successfully"))
   .catch((err) => {
-    console.error("MongoDB connection error", err);
+    console.log(err);
   });
+
 
 const app = express();
 
@@ -165,88 +160,81 @@ app.get("/getUser", (req, res) => {
 
 // create project route
 
-app.post('/creer',upload.single("image"),async (req ,res)=>{
-  try{
-    const { description , montant} = req.body;
-    const fil = req.file
-    const owner = req.user._id
 
-    const newprojet  = new Projet({
-      owner :owner ,
-      image: path.resolve(fil?.path),
-      description : description,
-      montant : montant
-    })
+app.post('/creer',  async(req, res) => {
+ const { Montant ,categorie ,nom ,description ,image} = req.body
 
-    const result = await newprojet.save()
-    res.send('projet creer !')
+ const newProjet = new Projet({
+  owner :req.user._id,
+  nom:nom,
+  image: image,
+  description : description,
+  categorie:categorie,
+  montant : Montant + ' CFA'
+ })
+ try{
+  const result= await newProjet.save()
+  console.log(result)
+ }catch(err){
+  console.log(err)
+ }
+ res.send(true)
 
-  }catch(Err){
-    console.log(Err)
-    res.send("erreur lors de la creation du projet")
-  }
 
-})
+});
+
 
 //my projects routes
 
-app.get('/myProjects',async(req ,res)=>{
-  const ownerid = req.user._id 
+app.get("/myProjects", async (req, res) => {
+  const owner = req.user._id
 
   try{
-    const result =await Projet.find({ owner: ownerid})
-    console.log(result)
-    res.send(result)
+    const projet = await Projet.find( {owner : owner})
+    res.json(projet)
   }catch(err){
     console.log(err)
   }
-
-})
+});
 
 // File uploads route
-app.post(
-  "/uploads",
-  upload.array("receiptFile"),
-  async (req, res, next) => {
-    try {
-      const files = req.files;
-      const { description, address } = req.body;
-      const ownerid = req.user._id;
+app.post("/uploads", async (req, res, next) => {
+  try {
+    const { description, address } = req.body;
+    const ownerid = req.user._id;
 
-      // Update organization fields
-      const updatedOrga = await Organisation.findByIdAndUpdate(
-        ownerid,
-        {
-          adresse: address,
-          description: description
-        },
-        { new: true }
-      );
-
-      if (!updatedOrga) {
-        return res.status(404).send("Organization not found.");
-      }
-
-      const newDemande = new Demande({
-        ownerName: updatedOrga.nom_organisation,
-        ownerId: ownerid,
-        description: description,
+    // Update organization fields
+    const updatedOrga = await Organisation.findByIdAndUpdate(
+      ownerid,
+      {
         adresse: address,
-        file1: path.resolve(files[0].path),
-        file2: path.resolve(files[1].path),
-      });
+        description: description,
+      },
+      { new: true }
+    );
 
-      const result = await newDemande.save();
-      console.log(result);
-
-      res.send("Data saved successfully.");
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("An error occurred while saving the data.");
+    if (!updatedOrga) {
+      return res.status(404).send("Organization not found.");
     }
-  }
-);
 
+    const newDemande = new Demande({
+      ownerName: updatedOrga.nom_organisation,
+      ownerId: ownerid,
+      description: description,
+      adresse: address,
+      //file1: files[0].filename,
+      //file2: files[1].filename,
+    });
+
+    const result = await newDemande.save();
+    console.log(result);
+
+    res.send("Data saved successfully.");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("An error occurred while saving the data.");
+  }
+});
 
 app.listen(8000, () => {
   console.log("Server started on port 8000");

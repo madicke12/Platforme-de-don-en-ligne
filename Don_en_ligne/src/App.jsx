@@ -14,13 +14,17 @@ import Home from "./Page/home";
 import Mission from "./Page/mission";
 import Inscription, { action } from "./Page/signup";
 import { loader as navLoader } from "./Components/navbar";
-import ProfilePage ,{loader as l} from "./Components/profilDonateur";
 import OrganisationProfilePage from "./Components/profilorga";
 import CreerProjetOrga from "./Components/CreerProjetOrga";
 import Dashboard, { DashboardLoader } from "./Components/dashboard";
 import ValidationForm from "./Components/formulaire";
 import { action as validationAction} from "./Components/formulaire";
 import { action as creeraction } from "./Components/CreerProjetOrga";
+import { ProjetOrga } from "./Components/projetOrga";
+import { loader as projetLoader } from "./Components/projetOrga";
+import DonateurDashboard ,{DonateurDashboardLoader} from "./Components/Donateuradashboard";
+import DonateurProfilePage from "./Components/profilDonateur";
+import DonateurHistory from "./Components/donateurHistory";
 
 
 
@@ -34,18 +38,21 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="about" element={<Mission />} />
         <Route
-          loader={l}
+          
           path="profil/donateur"
-          element={<ProfilePage />}
-        />
+          element={<DonateurProfilePage/>}
+        >
+          <Route loader={DonateurDashboardLoader} index element={<DonateurDashboard/>}/>
+          <Route path="historique" element={<DonateurHistory/>}/>
+        </Route>
         <Route
      
           path="profil/organisation"
           element={<OrganisationProfilePage />}
         >
         <Route loader={DashboardLoader} index element={<Dashboard/>}/>
-        <Route  path="projet" element={<h1>j</h1>}/>
-        <Route action={creeraction} path="creer" element={<CreerProjetOrga/>}/>
+        <Route loader={projetLoader} path="projet" element={<ProjetOrga/>}/>
+        <Route  action={creeraction} path="creer" element={<CreerProjetOrga/>}/>
         </Route>
       </Route>
       <Route path="login" element={<Signin />} action={Signin_action} />
