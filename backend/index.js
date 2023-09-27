@@ -6,22 +6,10 @@ import bcrypt from "bcryptjs";
 import bodyParser from "body-parser";
 import session from "express-session";
 import mongoose from "mongoose";
-import { Organisation, Projet } from "./schema.js";
-import { Donateur } from "./schema.js";
 import { myfunction } from "./passport.js";
-import { Demande } from "./schema.js";
+import { Demande ,Donateur ,Projet ,Organisation ,Don ,Init} from "./schema.js";
 
 const pass = process.env["Mongo_password"];
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "../Don_en_ligne/src/assets");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, Date.now() + path.extname(file.originalname));
-//   },
-// });
-
 mongoose
   .connect(
     `mongodb+srv://madicke:${encodeURIComponent(
@@ -33,14 +21,13 @@ mongoose
     console.log(err);
   });
 
-
 const app = express();
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
   })
 );
@@ -160,47 +147,43 @@ app.get("/getUser", (req, res) => {
 
 // create project route
 
+app.post("/creer", async (req, res) => {
+  const { Montant, categorie, nom, description, image } = req.body;
 
-app.post('/creer',  async(req, res) => {
- const { Montant ,categorie ,nom ,description ,image} = req.body
-
- const newProjet = new Projet({
-  owner :req.user._id,
-  nom:nom,
-  image: image,
-  description : description,
-  categorie:categorie,
-  montant : Montant + ' CFA'
- })
- try{
-  const result= await newProjet.save()
-  console.log(result)
- }catch(err){
-  console.log(err)
- }
- res.send(true)
-
-
+  const newProjet = new Projet({
+    owner: req.user._id,
+    nom: nom,
+    image: image,
+    description: description,
+    categorie: categorie,
+    montant: Montant + " CFA",
+  });
+  try {
+    const result = await newProjet.save();
+    console.log(result);
+  } catch (err) {
+    console.log(err);
+  }
+  res.send(true);
 });
-
 
 //my projects routes
 
 app.get("/myProjects", async (req, res) => {
-  const owner = req.user._id
+  const owner = req.user._id;
 
-  try{
-    const projet = await Projet.find( {owner : owner})
-    res.json(projet)
-  }catch(err){
-    console.log(err)
+  try {
+    const projet = await Projet.find({ owner: owner });
+    res.json(projet);
+  } catch (err) {
+    console.log(err);
   }
 });
 
 // File uploads route
 app.post("/uploads", async (req, res, next) => {
   try {
-    const { description, address } = req.body;
+    const { description, address, file1, file2 } = req.body;
     const ownerid = req.user._id;
 
     // Update organization fields
@@ -222,8 +205,11 @@ app.post("/uploads", async (req, res, next) => {
       ownerId: ownerid,
       description: description,
       adresse: address,
-      //file1: files[0].filename,
-      //file2: files[1].filename,
+      file1: file1,
+      file2: file2,
+      isApproved : false,
+      isPending:true
+   
     });
 
     const result = await newDemande.save();
@@ -235,6 +221,189 @@ app.post("/uploads", async (req, res, next) => {
     res.status(500).send("An error occurred while saving the data.");
   }
 });
+app.get("/projets", async (req, res) => {
+  try {
+    const projets = await Projet.find();
+    res.json(projets);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post('/projet',async(req,res)=>{
+  const {projetId} = req.body
+  try{
+    const projet = await Projet.findOne({_id:projetId})
+    res.json(projet)
+  }catch(err){
+    console.log(err)
+  }
+})
+
+
+app.post("/initiate",async(req , res)=>{
+  const project = req.body
+  console.log(project)
+  try{
+    const newInitiate = new Init({
+      Id_donateur: req.user._id,
+      Id_organisation : project.project.owner,
+      Id_projet: project.project._id
+    })
+
+    const result= await newInitiate.save()
+    console.log(result)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+app.post("/donate", async (req, res) => {
+  const init = await Init.findOne({Id_donateur: req.user._id})
+  const {montant , NumeroCompte , paymentMethod} = req.body
+  const organisation= await Organisation.findById({_id:init.Id_organisation}) 
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().split('T')[0]
+  try{
+    const newDon = new Don({
+      Id_donateur: init.Id_donateur ,
+      Id_organisation:init.Id_organisation ,
+      Id_projet:init.Id_projet,
+      montant: montant,
+      paymentMethod:paymentMethod,
+      NumeroCompte: NumeroCompte,
+      date: formattedDate,
+      organisation: organisation.nom_organisation
+    })
+
+    const result = await newDon.save()
+    await Init.deleteMany({Id_donateur:init.Id_donateur})
+    console.log(result)
+  }catch(err){
+    console.log(err)
+  }
+
+
+});
+
+
+app.get("/admin/pending-requests", async (req, res) => {
+  try {
+    const PendingRequest = await Demande.find({ isPending: true });
+    res.json(PendingRequest);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/admin/approve", async (req, res) => {
+  console.log('aa')
+  const { requestId } = req.body;
+console.log(req.body)
+  try {
+    const result = await Demande.findByIdAndUpdate(
+      requestId, 
+    {
+      isApproved: true,
+      isPending: false,
+    },{new:true});
+    console.log(result)
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/admin/unapprove", async (req, res) => {
+  const { requestId } = req.body;
+  try {
+    const result = await Demande.findByIdAndUpdate(requestId, {
+      isApproved: false,
+      isPending: false,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get("/admin/approved-Requests", async (req, res) => {
+  try {
+    const ApprovedRequest = await Demande.find(
+      { isApproved: true },
+      { isPending: false }
+    );
+    res.json(ApprovedRequest);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get("/admin/unapproved-Request", async (req, res) => {
+  try {
+    const unapprovedRequest = await Demande.find(
+      { isApproved: false },
+      { isPending: false }
+    );
+    res.json(unapprovedRequest);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/projet/update",async(req,res)=>{
+  const {Montant, categorie, nom, description, image ,_id} = req.body
+try{
+  const result = await Projet.findByIdAndUpdate(_id, {
+    nom: nom,
+    image: image,
+    description: description,
+    categorie: categorie,
+    montant: Montant + " CFA",
+  });
+  console.log(result)
+}catch(err){
+  console.log(err)
+}
+
+
+})
+
+app.post("/projet/delete",async(req,res)=>{
+  const {projetID} = req.body
+  try{
+    await Projet.findByIdAndDelete({_id:projetID})
+  }catch(err){
+    console.log(err)
+  }
+
+})
+
+app.get("/dons/historique",async(req,res)=>{
+  const userId= req.user._id
+
+  try{
+    const historique = await Don.find({Id_donateur:userId})
+    res.json(historique)
+  }catch(err){
+    console.log(err)
+  }
+})
+
+app.post("/updateProfil",async(req,res)=>{
+  const userId= req.user._id
+  const {prenom ,nom ,email ,telephone} = req.body
+  try{
+    await Donateur.findByIdAndUpdate(
+      userId,
+      {
+        prenom:prenom,
+        nom: nom,
+        telephone: telephone,
+        emal:email,
+      },
+  )}catch(err){
+    console.log(err)
+  }
+})
 
 app.listen(8000, () => {
   console.log("Server started on port 8000");

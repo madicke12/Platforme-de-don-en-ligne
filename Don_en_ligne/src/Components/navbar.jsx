@@ -7,9 +7,14 @@ import ProfileDropdown from "./profil";
 
 export const loader = async ()=>{
 
+   try{
     const user = await axios.get('http://localhost:8000/user' , {withCredentials: true})
-    //console.log(user)
     return user
+   }catch(err){
+    console.log(err)
+   }
+
+   return null
   }
 
 const Navbar =  () => {
@@ -26,6 +31,9 @@ const Navbar =  () => {
   const toggleMenu = () => {
     setIsopen(!isopen);
   };
+
+ 
+  const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
 
   return (
     <header className="shadow-md sm:flex sm:justify-between items-center">
@@ -67,19 +75,19 @@ const Navbar =  () => {
       >
         <NavLink
           to="/"
-          className="text-black  font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
+          className={`text-black  font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline ${ isAdmin  ? 'hidden' : ''}`}
         >
           Accueil
         </NavLink>
         <NavLink
           to="/projects"
-          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
+          className={`text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline ${ isAdmin ? 'hidden' : ''}`}
         >
           Projets
         </NavLink>
         <NavLink
           to="/about"
-          className="text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline"
+          className={`text-black font-bold hover:shadow-lg px-3 py-2 block rounded-md no-underline ${ isAdmin ? 'hidden' : ''}`}
         >
           Notre Mission
         </NavLink>

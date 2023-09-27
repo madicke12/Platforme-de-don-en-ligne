@@ -24,9 +24,12 @@ useEffect(()=>{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
 
   const handleLogout = async ()=>{
     const res = await axios.get('http://localhost:8000/logout' ,{withCredentials:true})
+    localStorage.setItem('userType',null)
+
     window.location.href ='http://localhost:5173'
     console.log(res)
 }
@@ -48,7 +51,7 @@ useEffect(()=>{
         <div className="absolute   right-1 mt-3 py-2 w-48 bg-white rounded-lg shadow-lg">
           <Link
             to={`profil/${usertype}`}
-            className="block px-4 py-2 text-gray-800 hover:bg-gray-200 no-underline shadow-md"
+            className={`block px-4 py-2 text-gray-800 hover:bg-gray-200 no-underline shadow-md ${isAdmin ? 'hidden':''}`}
           >
             Mon profil
           </Link>

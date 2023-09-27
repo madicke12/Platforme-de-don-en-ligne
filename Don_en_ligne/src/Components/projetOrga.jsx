@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 import axios from "axios"
-import { useLoaderData } from "react-router-dom"
- import logo from '../assets/1688611114217.jpg'
+import { useLoaderData ,Link, Outlet } from "react-router-dom"
 
 
 export const loader = async ()=>{
     try{
         const projet = await axios.get("http://localhost:8000/myProjects",{withCredentials:true})
-        return projet.data
+       if(projet.data) return projet.data
         
     }catch(err){
         console.log(err)
@@ -15,6 +14,16 @@ export const loader = async ()=>{
 
     return null
 }
+
+const Delete = (projetID) => {
+  try {
+    axios.post("http://localhost:8000/projet/delete", { projetID: projetID }, { withCredentials: true });
+    window.location.href ="/profil/organisation/projet" ; 
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 
 const ProjetCard = ({ projet }) => {
     return (
@@ -25,15 +34,14 @@ const ProjetCard = ({ projet }) => {
         <p className="text-gray-600 mb-2">Catégorie : {projet.categorie}</p>
         <p className="text-gray-600">Montant objectif : {projet.montant}</p>
         <div className="flex justify-between mt-4">
-        <button
+       <Link to={`/profil/organisation/update/projet/${projet._id}`} 
           className="bg-blue-500 text-white px-4 py-2 rounded"
-          
         >
           Modifier
-        </button>
+     </Link>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded"
-          
+          onClick={()=>Delete(projet._id)}
         >
           Supprimer
         </button>
@@ -56,9 +64,11 @@ export const ProjetOrga = () =>{
     console.log(projects)
 
   return (
+     
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Liste des projets</h2>
       <ProjetList projets={projects} />
+
     </div>
-  )
+    )
 }

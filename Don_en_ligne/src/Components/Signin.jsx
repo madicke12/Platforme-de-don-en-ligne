@@ -32,17 +32,25 @@ else{
     });
     if (user.data) {
       localStorage.setItem("userType" ,user.data.type)
-      if(user.data.type === 'organisation'){
-        localStorage.setItem('nom' ,user.data.nom_organisation)
-      }
-      else{
+      if(user.data.type ==='admin'){
+        window.location.href='/admin'
+
         localStorage.setItem('nom' ,user.data.nom)
       }
+      if(user.data.type === 'organisation'){
+        localStorage.setItem('nom' ,user.data.nom_organisation)
+        window.location.href='/'
+      }
+      else if(user.data.type === 'donateur'){
+        localStorage.setItem('nom' ,user.data.nom)
+        window.location.href='/'
+      }
+  
+
     }
   } catch (err) {
     console.log(err);
   }
-  window.location.href='/'
   console.log(reponse.data.connected)
    return null}
  if( ! reponse.data.status){

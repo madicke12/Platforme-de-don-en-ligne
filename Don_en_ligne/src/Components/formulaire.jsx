@@ -1,26 +1,62 @@
 
   
    
-  import  { useState } from 'react';
-  import logo from '../assets/logo.jpeg'
-  import {Form} from 'react-router-dom'
+import  { useState } from 'react';
+import logo from '../assets/logo.jpeg'
+import {Form, useActionData} from 'react-router-dom'
 import axios from 'axios';
+import { v4 } from 'uuid';
+import {storage} from '../utilities/firebase';
+import {ref , uploadBytes   ,getDownloadURL  } from "firebase/storage";
 
 
 
-export const action = async ({request})=>{
-  const formData = await request.formData();
-  try{
-    const result = await axios.post('http://localhost:8000/uploads',formData ,{withCredentials:true})
-    console.log(result)
-    window.location.href='/profil/organisation'
-  }catch(err){
-    console.log(err)
+export const action = async ({ request }) => {
+  const formdata = await request.formData();
+  const image1 = formdata.get('receiptFile1');
+  const image2 = formdata.get('receiptFile');
+  const address = formdata.get('address');
+  const description = formdata.get('description');
+
+  const filename1 = image1.name + v4();
+  const filename2 = image2.name + v4();
+
+  const imageRef1 = ref(storage, `uploads/file/${filename1}`);
+  const imageRef2 = ref(storage, `uploads/file/${filename2}`);
+
+  const uploadTask1 = uploadBytes(imageRef1, image1);
+  const uploadTask2 = uploadBytes(imageRef2, image2);
+
+  try {
+    await Promise.all([uploadTask1, uploadTask2]);
+
+    const [url1, url2] = await Promise.all([
+      getDownloadURL(imageRef1),
+      getDownloadURL(imageRef2),
+    ]);
+
+    const data = {
+      description : description,
+      address: address,
+      file1: url1,
+      file2: url2,
+    };
+
+    try {
+      const result = await axios.post('http://localhost:8000/uploads', data, {
+        withCredentials: true,
+      });
+      window.location.href='/profil/organisation'
+      return result.data;
+    } catch (err) {
+      console.log(err);
+    }
+  } catch (error) {
+    console.log(error);
   }
-  return null
 
-}
-
+  return null;
+};
 
 
 
@@ -28,10 +64,9 @@ export const action = async ({request})=>{
   
   const ValidationForm = () => {
     const [description, setDescription] = useState('');
-   
-    const [address, setAddress] = useState('');
-    const [website, setWebsite] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+   const a = useActionData()
+   console.log(a)
+    
     const [statusFile, setStatusFile] = useState('');
     const [receiptFile, setReceiptFile] = useState('');
 
@@ -57,8 +92,7 @@ export const action = async ({request})=>{
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="description"
                 placeholder="Description de l'organisation"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                
                 required
               />
             </div>
@@ -73,24 +107,10 @@ export const action = async ({request})=>{
               name="address"
               type="text"
               placeholder="Adresse"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneNumber">
-            Quel est le n° de téléphone de votre organisation ?
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              name="phoneNumber"
-              type='tel'
-              placeholder="Numéro de téléphone"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-          </div>
+         
           <div className="mb-4">
   <label className="block text-gray-700 text-sm font-bold mb-2">
     Document officiel prouvant le statut d'association caritative :
@@ -100,7 +120,7 @@ export const action = async ({request})=>{
   </p>
   <input
     type="file"
-    name="receiptFile"
+    name="receiptFile1"
     accept=".pdf,.jpeg,.jpg,.png"
     onChange={(e) => setStatusFile(e.target.files?.[0]?.name || '')}
   required
