@@ -9,6 +9,7 @@ export const loader = async ()=>{
 
    try{
     const user = await axios.get('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/user' , {withCredentials: true})
+    console.log(user)
     return user
    }catch(err){
     console.log(err)
@@ -22,7 +23,7 @@ const Navbar =  () => {
   const state = useLoaderData()
   const [ etat,setEtat] = useState()
   useEffect(()=>{
-    setEtat(state.data)
+    setEtat(state.data.connected)
   },[state])
   //console.log(state)
   
@@ -32,7 +33,7 @@ const Navbar =  () => {
     setIsopen(!isopen);
   };
 
- 
+  localStorage.setItem('userType','')
   const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
 
   return (
