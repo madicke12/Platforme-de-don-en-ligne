@@ -6,12 +6,12 @@ myfunction(passport);
 
 export async function handler(event) {
   // Ensure only POST requests are allowed
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-    };
-  }
+  // if (event.httpMethod !== 'POST') {
+  //   return {
+  //     statusCode: 405,
+  //     body: JSON.stringify({ message: 'Method Not Allowed' }),
+  //   };
+  // }
 
   // Parse the request body
   const requestBody = JSON.parse(event.body);
