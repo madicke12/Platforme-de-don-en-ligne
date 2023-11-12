@@ -33,8 +33,9 @@ const Navbar =  () => {
     setIsopen(!isopen);
   };
 
-  localStorage.setItem('userType','')
-  const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
+  // localStorage.setItem('userType','')
+  // const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
+  const isAdmin = false
 
   return (
     <header className="shadow-md sm:flex sm:justify-between items-center">
