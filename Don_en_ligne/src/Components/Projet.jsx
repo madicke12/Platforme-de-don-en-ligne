@@ -6,9 +6,7 @@ import Mycomponents from "./projet.listes";
 
 export const ProjetLoader = async () => {
   try {
-    const result = axios.get("http://localhost:8000/projets", {
-      withCredentials: true,
-    });
+    const result = axios.get("https://backend-3b4b.onrender.com/projets");
     return defer({ data: result });
   } catch (err) {
     console.log(err);
