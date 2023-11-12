@@ -1,8 +1,6 @@
-import bcrypt from 'bcryptjs'
-import { Donateur } from "./shared/schema.js";
-import { Strategy } from "passport-local";
-import { Organisation } from "./shared/schema.js";
-import { Admnin } from './shared/schema.js';
+import bcrypt from 'bcryptjs';
+import { Donateur, Organisation } from './schema'; // Adjust the path based on your project structure
+import { Strategy } from 'passport';
 
 export function myfunction(passport) {
   passport.use(
@@ -13,11 +11,8 @@ export function myfunction(passport) {
         });
         if (orgaResult) {
           try {
-            const passwordMatch = await bcrypt.compare(
-              password,
-              orgaResult.password
-            );
-          
+            const passwordMatch = await bcrypt.compare(password, orgaResult.password);
+
             if (passwordMatch) {
               return done(null, orgaResult);
             } else {
@@ -32,10 +27,7 @@ export function myfunction(passport) {
           });
           if (donateurResult) {
             try {
-              const passwordMatch = await bcrypt.compare(
-                password,
-                donateurResult.password
-              );
+              const passwordMatch = await bcrypt.compare(password, donateurResult.password);
               if (passwordMatch) {
                 return done(null, donateurResult);
               } else {
@@ -47,9 +39,7 @@ export function myfunction(passport) {
           } else {
             return done(null, false);
           }
-          
-        } 
-        
+        }
       } catch (error) {
         throw error;
       }
