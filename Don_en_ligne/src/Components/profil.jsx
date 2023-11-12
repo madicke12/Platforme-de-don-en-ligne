@@ -42,7 +42,7 @@ const ProfileDropdown = () => {
       {isOpen && (
         <div className="absolute   right-1 mt-3 py-2 w-48 bg-white rounded-lg shadow-lg">
           <Link
-            to={`profil/${usertype}`}
+            to={`profil/${'donateur'}`}
             className={`block px-4 py-2 text-gray-800 hover:bg-gray-200 no-underline shadow-md ${isAdmin ? 'hidden':''}`}
           >
             Mon profil
