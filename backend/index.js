@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import mongoose from "mongoose";
 import { myfunction } from "./passport.js";
-import { Demande ,Donateur ,Projet ,Organisation ,Don ,Init} from "./schema.js";
+import { Demande ,Donateur ,Projet ,Organisation ,Don ,Init} from "./shared/schema.js";
 
 const pass = process.env["Mongo_password"];
 mongoose
@@ -27,7 +27,7 @@ app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -148,15 +148,17 @@ app.get("/getUser", (req, res) => {
 // create project route
 
 app.post("/creer", async (req, res) => {
-  const { Montant, categorie, nom, description, image } = req.body;
-
+  const { Montant, categorie, nom, description, image ,date_cloture} = req.body;
+  console.log(date_cloture)
   const newProjet = new Projet({
     owner: req.user._id,
     nom: nom,
     image: image,
     description: description,
     categorie: categorie,
-    montant: Montant + " CFA",
+    montant: Montant,
+    date_cloture:date_cloture.toString().substring(0,10)
+    
   });
   try {
     const result = await newProjet.save();
@@ -262,8 +264,8 @@ app.post("/donate", async (req, res) => {
   const init = await Init.findOne({Id_donateur: req.user._id})
   const {montant , NumeroCompte , paymentMethod} = req.body
   const organisation= await Organisation.findById({_id:init.Id_organisation}) 
-  const currentDate = new Date();
-  const formattedDate = currentDate.toISOString().split('T')[0]
+  const currentDate = new Date().toISOString();
+  const formattedDate = currentDate.substring(0, 10)
   try{
     const newDon = new Don({
       Id_donateur: init.Id_donateur ,
@@ -350,7 +352,8 @@ app.get("/admin/unapproved-Request", async (req, res) => {
 });
 
 app.post("/projet/update",async(req,res)=>{
-  const {Montant, categorie, nom, description, image ,_id} = req.body
+  const {Montant, categorie, nom, description, image ,_id ,date_cloture} = req.body
+  console.log(date_cloture)
 try{
   const result = await Projet.findByIdAndUpdate(_id, {
     nom: nom,
@@ -358,6 +361,7 @@ try{
     description: description,
     categorie: categorie,
     montant: Montant + " CFA",
+    date_cloture:date_cloture
   });
   console.log(result)
 }catch(err){
@@ -390,7 +394,8 @@ app.get("/dons/historique",async(req,res)=>{
 
 app.post("/updateProfil",async(req,res)=>{
   const userId= req.user._id
-  const {prenom ,nom ,email ,telephone} = req.body
+  const {prenom ,nom ,username ,telephone} = req.body
+  console.log(prenom ,nom ,username ,telephone)
   try{
     await Donateur.findByIdAndUpdate(
       userId,
@@ -398,7 +403,7 @@ app.post("/updateProfil",async(req,res)=>{
         prenom:prenom,
         nom: nom,
         telephone: telephone,
-        emal:email,
+        username:username,
       },
   )}catch(err){
     console.log(err)
