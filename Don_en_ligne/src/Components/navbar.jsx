@@ -34,7 +34,7 @@ const Navbar =  () => {
   };
 
 
-
+const isAdmin = false
 
   return (
     <header className="shadow-md sm:flex sm:justify-between items-center">

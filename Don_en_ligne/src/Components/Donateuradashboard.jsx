@@ -7,7 +7,7 @@ import { useToast } from '@chakra-ui/react'
 
 export const DonateurDashboardLoader = async() => {
   try {
-    const data = await axios.get("http://localhost:8000/getUser", {
+    const data = await axios.get("https://backend-3b4b.onrender.com/getUser", {
       withCredentials: true,
     });
     return data.data ;
@@ -47,7 +47,7 @@ export const Modifyaction = async ({ request }) => {
 
 const sendFormDataToServer = async (data) => {
   try {
-     await axios.post("http://localhost:8000/updateProfil",data,{
+     await axios.post("https://backend-3b4b.onrender.com/updateProfil",data,{
       withCredentials: true,
     });
     

@@ -43,7 +43,7 @@ export const action = async ({ request }) => {
     };
 
     try {
-      const result = await axios.post('http://localhost:8000/uploads', data, {
+      const result = await axios.post('https://backend-3b4b.onrender.com/uploads', data, {
         withCredentials: true,
       });
       window.location.href='/profil/organisation'
