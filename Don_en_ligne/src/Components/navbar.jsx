@@ -8,7 +8,7 @@ import ProfileDropdown from "./profil";
 export const loader = async ()=>{
 
    try{
-    const user = await axios.get('https://backend-3b4b.onrender.com/user' , {withCredentials: true})
+    const user = await axios.get('https://backend-3b4b.onrender.com/user'   )
     console.log(user)
     return user
    }catch(err){
