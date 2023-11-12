@@ -5,7 +5,7 @@ import { useLoaderData } from 'react-router-dom';
 
 export const  PendingRequestLoader = async ()=>{
     try {
-        const response = await axios.get('http://localhost:8000/admin/pending-requests');
+        const response = await axios.get('https://backend-3b4b.onrender.com/admin/pending-requests');
 
         return response.data
       } catch (error) {
@@ -21,7 +21,7 @@ const AdminDashboard = () => {
 
     const handleApproveRequest = async(req)=>{
         try{
-            const result = await axios.post('http://localhost:8000/admin/approve',{requestId:req},{withCredentials:true})
+            const result = await axios.post('https://backend-3b4b.onrender.com/admin/approve',{requestId:req},{withCredentials:true})
     
         }catch(err){
             console.log(err)
@@ -30,7 +30,7 @@ const AdminDashboard = () => {
 
 const handleunapproveRequest= async (req)=>{
     try{
-        const result = await axios.post('http://localhost:8000/admin/unapprove',{requestId:req},{withCredentials:true})
+        const result = await axios.post('https://backend-3b4b.onrender.com/admin/unapprove',{requestId:req},{withCredentials:true})
 
     }catch(err){
         console.log(err)

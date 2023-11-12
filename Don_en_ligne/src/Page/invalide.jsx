@@ -5,7 +5,7 @@ import { useLoaderData } from 'react-router-dom';
 
 export const  InvalideRequestLoader = async ()=>{
     try {
-        const response = await axios.get('http://localhost:8000/admin/unapproved-Request');
+        const response = await axios.get('https://backend-3b4b.onrender.com/admin/unapproved-Request');
 
         return response.data
       } catch (error) {

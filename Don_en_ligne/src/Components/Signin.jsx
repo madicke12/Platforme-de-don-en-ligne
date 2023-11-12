@@ -27,9 +27,7 @@ else{
  const reponse=  await sendFormDataToServer(data)
  if(reponse.data.connected) {
   try {
-    const user = await axios.get("https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/getUser", {
-      withCredentials: true,
-    });
+    const user = await axios.get("https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/getUser");
     if (user.data) {
       localStorage.setItem("userType" ,user.data.type)
       if(user.data.type ==='admin'){
@@ -63,7 +61,7 @@ else{
 }}
 async function sendFormDataToServer(data) {
   try {
-    const res = await axios.post("https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/login", data, { withCredentials: true });
+    const res = await axios.post("https://backend-3b4b.onrender.com/login", data);
     return res
   } catch (error) {
     console.log(error);

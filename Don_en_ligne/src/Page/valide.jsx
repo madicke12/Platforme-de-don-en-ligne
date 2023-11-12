@@ -5,7 +5,7 @@ import { useLoaderData } from 'react-router-dom';
 
 export const  ValideRequestLoader = async ()=>{
     try {
-        const response = await axios.get('http://localhost:8000/admin/approved-Requests');
+        const response = await axios.get('https://backend-3b4b.onrender.com/admin/approved-Requests');
 
         return response.data
       } catch (error) {

@@ -33,8 +33,7 @@ const Navbar =  () => {
     setIsopen(!isopen);
   };
 
-   localStorage.setItem('userType','')
-   const isAdmin = false
+
 
 
   return (

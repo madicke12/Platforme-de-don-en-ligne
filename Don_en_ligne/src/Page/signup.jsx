@@ -89,7 +89,7 @@ export async function action({ request }) {
 
 async function logUserIn(data){
   try{
-    const res = await axios.post('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/login',data,{withCredentials:true})
+    const res = await axios.post('https://backend-3b4b.onrender.com/login',data,{withCredentials:true})
     console.log(res)
     window.location.href='/validation'
   }catch(Err){
@@ -98,7 +98,7 @@ async function logUserIn(data){
 }
 async function sendFormDataToServer(data) {
   try {
-    const res = await axios.post("http://localhost:8000/register", data, { withCredentials: true });
+    const res = await axios.post("https://backend-3b4b.onrender.com/register", data, { withCredentials: true });
     console.log(res.data);
    
 

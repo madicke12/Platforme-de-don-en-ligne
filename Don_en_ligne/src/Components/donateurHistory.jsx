@@ -17,7 +17,7 @@ import { useLoaderData, defer, Await } from "react-router-dom";
 import Loader from "./loader";
 export const HistoriqueLoader = () => {
   try {
-    const results = axios.get("http://localhost:8000/dons/historique", {
+    const results = axios.get("https://backend-3b4b.onrender.com/dons/historique", {
       withCredentials: true,
     });
     return defer({ historiques: results });
