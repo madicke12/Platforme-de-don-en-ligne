@@ -1,10 +1,10 @@
 import passport from 'passport';
-import { myfunction } from '../../shared/passport'; // Adjust the path based on your project structure
+import { myfunction } from '../../shared/passport';
 
 // Initialize passport
 myfunction(passport);
 
-export async function handler(event) {
+export async function handler(event, context) {
   // Ensure only POST requests are allowed
   // if (event.httpMethod !== 'POST') {
   //   return {
@@ -12,26 +12,6 @@ export async function handler(event) {
   //     body: JSON.stringify({ message: 'Method Not Allowed' }),
   //   };
   // }
-
-  // Parse the request body
-  const requestBody = JSON.parse(event.body);
-
-  // Create an Express-like request and response object
-  const req = {
-    method: 'POST',
-    body: requestBody,
-    headers: event.headers,
-    // ... add other properties as needed
-  };
-
-  const res = {
-    status: (code) => ({
-      send: (body) => ({
-        statusCode: code,
-        body: JSON.stringify(body),
-      }),
-    }),
-  };
 
   return new Promise((resolve, reject) => {
     passport.authenticate('local', (err, user, info) => {
@@ -43,10 +23,20 @@ export async function handler(event) {
       }
 
       if (user) {
-        resolve(res.status(200).send(true));
+        resolve({
+          statusCode: 200,
+          body: JSON.stringify({ connected: true }),
+        });
       } else {
-        resolve(res.status(200).send(false));
+        // Check if the body is not empty before attempting to parse
+        const body = event.body ? JSON.parse(event.body) : null;
+        const errorMessage = body?.message || 'Email or password incorrect';
+
+        resolve({
+          statusCode: 200,
+          body: JSON.stringify({ connected: false, message: errorMessage }),
+        });
       }
-    })(req, res, () => {});
+    })(event, context, () => {});
   });
 }
