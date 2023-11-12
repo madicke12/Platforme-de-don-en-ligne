@@ -24,13 +24,14 @@ useEffect(()=>{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  localStorage.setItem('userType','')
   const isAdmin = localStorage.getItem('userType').replace(/"/g, '') === 'admin' ? true : false
 
   const handleLogout = async ()=>{
-    const res = await axios.get('http://localhost:8000/logout' ,{withCredentials:true})
+    const res = await axios.get('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/logout' ,{withCredentials:true})
     localStorage.setItem('userType',null)
 
-    window.location.href ='http://localhost:5173'
+    window.location.href ='https://jazzy-creponne-c2ece4.netlify.app'
     console.log(res)
 }
   return (

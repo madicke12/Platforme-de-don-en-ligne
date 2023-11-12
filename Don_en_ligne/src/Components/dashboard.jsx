@@ -6,7 +6,7 @@ import Joi from "joi"
 
 export const DashboardLoader = async ()=>{
     try {
-        const data = await axios.get('http://localhost:8000/getUser' ,{withCredentials:true})
+        const data = await axios.get('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/getUser' ,{withCredentials:true})
         if(data){
             return data.data
         }
