@@ -1,11 +1,11 @@
 import passport from 'passport';
-import { myfunction } from '../../shared/passport'; 
+import { myfunction } from '../../shared/passport';
 
-
+// Initialize passport
 myfunction(passport);
 
 export async function handler(event, context) {
-  
+  // Ensure only POST requests are allowed
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -22,21 +22,15 @@ export async function handler(event, context) {
         });
       }
 
-      if (!user) {
+      if (user) {
         resolve({
           statusCode: 200,
-          body: JSON.stringify({
-            message: 'Email or password incorrect',
-            status: false,
-          }),
+          body: JSON.stringify({ connected: true }),
         });
       } else {
-        event.requestContext = { authorizer: { user } }; 
         resolve({
           statusCode: 200,
-          body: JSON.stringify({
-            connected: true,
-          }),
+          body: JSON.stringify({ connected: false, message: 'Email or password incorrect' }),
         });
       }
     })(event, context, () => {});

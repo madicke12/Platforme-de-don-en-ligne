@@ -1,9 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { Donateur, Organisation } from './schema'; // Adjust the path based on your project structure
+import { Donateur, Organisation } from './schema';
 import { Strategy } from 'passport';
 
 export function myfunction(passport) {
   passport.use(
+    'local', // Add a name for the strategy, e.g., 'local'
     new Strategy(async (username, password, done) => {
       try {
         const orgaResult = await Organisation.findOne({
