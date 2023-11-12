@@ -27,7 +27,7 @@ export const action = async({request})=>{
         };
       console.log(data)
       try{
-        const result = await axios.post('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/creer',data,{withCredentials:true})
+        const result = await axios.post('https://backend-3b4b.onrender.com/creer',data,{withCredentials:true})
         return result.data
       }catch(err){
         console.log(err)

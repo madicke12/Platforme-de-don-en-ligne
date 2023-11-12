@@ -6,7 +6,7 @@ import Joi from "joi"
 
 export const DashboardLoader = async ()=>{
     try {
-        const data = await axios.get('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/getUser' ,{withCredentials:true})
+        const data = await axios.get('https://backend-3b4b.onrender.com/getUser' ,{withCredentials:true})
         if(data){
             return data.data
         }
@@ -45,7 +45,7 @@ if(result.error){
 const sendFormDataToServer = async (data) =>{
     try{
 
-        const res = await axios.post('http://localhost:8000/updateOrga' ,{withCredentials:true})
+        const res = await axios.post('https://backend-3b4b.onrender.com/updateOrga' ,{withCredentials:true})
         return res
     }
  catch (error) {
