@@ -1,19 +1,16 @@
 import bcrypt from 'bcryptjs';
 import { Donateur, Organisation } from './schema';
-import { Strategy } from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 export function myfunction(passport) {
+  // Use LocalStrategy with proper configuration
   passport.use(
-    'local', // Add a name for the strategy, e.g., 'local'
-    new Strategy(async (username, password, done) => {
+    new LocalStrategy(async (username, password, done) => {
       try {
-        const orgaResult = await Organisation.findOne({
-          username: username,
-        });
+        const orgaResult = await Organisation.findOne({ username: username });
         if (orgaResult) {
           try {
             const passwordMatch = await bcrypt.compare(password, orgaResult.password);
-
             if (passwordMatch) {
               return done(null, orgaResult);
             } else {
@@ -23,9 +20,7 @@ export function myfunction(passport) {
             throw err;
           }
         } else {
-          const donateurResult = await Donateur.findOne({
-            username: username,
-          });
+          const donateurResult = await Donateur.findOne({ username: username });
           if (donateurResult) {
             try {
               const passwordMatch = await bcrypt.compare(password, donateurResult.password);

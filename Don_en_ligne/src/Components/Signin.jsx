@@ -27,7 +27,7 @@ else{
  const reponse=  await sendFormDataToServer(data)
  if(reponse.data.connected) {
   try {
-    const user = await axios.get("http://localhost:8000/getUser", {
+    const user = await axios.get("https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/getUser", {
       withCredentials: true,
     });
     if (user.data) {
@@ -63,7 +63,7 @@ else{
 }}
 async function sendFormDataToServer(data) {
   try {
-    const res = await axios.post("http://localhost:8000/login", data, { withCredentials: true });
+    const res = await axios.post("https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/login", data, { withCredentials: true });
     return res
   } catch (error) {
     console.log(error);

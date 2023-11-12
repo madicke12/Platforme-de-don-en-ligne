@@ -8,7 +8,7 @@ import ProfileDropdown from "./profil";
 export const loader = async ()=>{
 
    try{
-    const user = await axios.get('http://localhost:8000/user' , {withCredentials: true})
+    const user = await axios.get('https://jazzy-creponne-c2ece4.netlify.app/.netlify/functions/user' , {withCredentials: true})
     return user
    }catch(err){
     console.log(err)
