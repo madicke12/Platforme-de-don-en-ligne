@@ -26,7 +26,6 @@ export const Modifyaction = async ({ request }) => {
     nom: Joi.string().required().min(3),
     username: Joi.string().required(),
     telephone: Joi.string().required(),
-    email: Joi.string().required()
   });
 
   const data = {

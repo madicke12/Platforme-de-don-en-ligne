@@ -32,7 +32,8 @@ export const UpdateProjetAction = async({request})=>{
             description: formdata.get('description'),
             categorie: formdata.get('categorie'),
             Montant: formdata.get('Montant'),
-            image: url, 
+            image: url,
+            date_cloture: formdata.get('cloture') 
           };
         console.log(data)
         try{
@@ -81,7 +82,12 @@ const handleMontantChange = (e) => {
         description : e.target.value
     });
   };
-
+  const handleClotureChange =(e)=>{
+    setProjet({
+      ...projet,
+      date_cloture:e.target.value
+    })
+  }
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h2 className="text-2xl font-bold mb-4">Modifier le projet</h2>
@@ -154,6 +160,20 @@ const handleMontantChange = (e) => {
               name="Montant"
               type="number"
               id="Montant objectif"
+            />
+          </div>
+          <div className=" flex flex-col mt-4">
+            <label htmlFor="cloture" className="mb-2 text-gray-400">
+              Date de cloture
+            </label>
+            <input
+            onChange={handleClotureChange}
+            value={Projet && Projet.date_cloture}
+            required
+              className="border-2 border-blue-gray-100 p-2 w-96 rounded-sm"
+              name="cloture"
+              type="date"
+              id="cloture"
             />
           </div>
           <div className=" flex flex-col mt-4">

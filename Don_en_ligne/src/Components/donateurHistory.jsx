@@ -34,25 +34,25 @@ const HistoriqueDons = () => {
   return (
     <Suspense fallback={<Loader />}>
       <div>
-      <Heading size="md" textAlign={'center'}>Client Report</Heading>
+      <Heading size="md" mt={'15'} textAlign={'center'}>historique des dons</Heading>
         <Await resolve={Donations.historiques}>
           {(histori) => {
             return (
               <>
                 {histori.data.map((donation) => (
                   
-                  <Card key={donation._id}>
+                  <Card key={donation._id} >
                     <CardBody>
                       <Stack divider={<StackDivider />} spacing="4">
                         <Box>
                           <Heading size="xs" textTransform="uppercase">
-                            {donation.organisation}
+                            {`${donation.organisation}`}
                           </Heading>
                           <HStack align={"center"} display={'flex'} justify={"space-between"} p={'10px'}>
                           <Text  fontSize="sm">
                             {donation.montant + ' CFA'}
                           </Text>
-                          <Text color={"blue.300"}>{donation.date}</Text>
+                          <Text color={"blue.300"}>{donation.date.slice(0, 10)}</Text>
                           </HStack>
                         </Box>
                       </Stack>

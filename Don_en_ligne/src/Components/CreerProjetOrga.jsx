@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import { Form,  useActionData } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import {storage} from '../utilities/firebase';
-import {ref , uploadBytes  ,listAll ,getDownloadURL  } from "firebase/storage";
+import {ref , uploadBytes   ,getDownloadURL  } from "firebase/storage";
 import { v4 } from "uuid";
 
 
@@ -24,6 +23,7 @@ export const action = async({request})=>{
           categorie: formdata.get('categorie'),
           Montant: formdata.get('Montant'),
           image: url, 
+          date_cloture:formdata.get('date_cloture')
         };
       console.log(data)
       try{
@@ -43,16 +43,8 @@ const CreerProjetOrga = () => {
   const result = useActionData() 
 
   console.log(result)
-  const showToast = (message) => {
-    toast.success(message, {
-      position:"top-center",
-      autoClose:5000,
-      hideProgressBar:false,
-      closeOnClick:true,
-      pauseOnHover:true,
-      draggable:true,
-      progress:undefined,
-      theme: "light",});
+  const showToast = () => {
+   
   }
 
 
@@ -60,18 +52,7 @@ const CreerProjetOrga = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h2 className="text-2xl font-bold mb-4">Créer un nouveau projet</h2>
-      <ToastContainer 
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"/>
-      <section className="flex items-center justify-center mt-5">
+      <section className="flex items-center justify-center mt-3">
         <Form method="post" encType="multipart/form-data">
           <div className=" flex flex-col">
             <label htmlFor="image" className="mb-2 text-gray-400">
@@ -92,7 +73,7 @@ const CreerProjetOrga = () => {
               id="nom"
             />
           </div>
-          <div className=" flex flex-col mt-4">
+          <div className=" flex flex-col mt-2">
             <label htmlFor="description" className="mb-2 text-gray-400">
               Descriptif du projet (breve)
             </label>
@@ -134,9 +115,21 @@ const CreerProjetOrga = () => {
               id="Montant objectif"
             />
           </div>
+          <div className=" flex flex-col mt-4">
+            <label htmlFor="cloture" className="mb-2 text-gray-400">
+              Date de cloture 
+            </label>
+            <input
+            required
+              className="border-2 border-blue-gray-100 p-2 w-96 rounded-sm"
+              name="date_cloture"
+              type='date'
+              id="cloture"
+            />
+          </div>
 
-          <div className="mt-5">
-            <button  className="bg-red-200 px-3 py-2 rounded-sm hover:bg-red-300">
+          <div className="mt-2">
+            <button  className="bg-red-200 px-4 py-2 mt-2 rounded-sm hover:bg-red-300">
               creer
             </button>
           </div>

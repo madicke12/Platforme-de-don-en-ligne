@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { Box ,Button} from "@chakra-ui/react";
+import Faire_donModal from "./faire_don_modal";
+
 
 const Mycomponents = (props) => {
   Mycomponents.propTypes = {
@@ -90,9 +93,12 @@ const Mycomponents = (props) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Projet.map((project) => (
-          <div
+          <Box
+            bg={'gray.100'}
+            borderTop={'4px'}
+            borderTopColor={'blue.200'}
             key={project._id}
-            className="border border-gray-300 rounded-md p-4 shadow-md"
+            className=" rounded-md p-4 shadow-md"
           >
             <h3 className="text-xl font-bold mb-2">{project.nom}</h3>
             <img
@@ -100,23 +106,24 @@ const Mycomponents = (props) => {
               alt={project.nom}
               className="w-full h-auto mb-4"
             />
-            <p>{project.description}</p>
+            <p>{project.description.slice(0,70) + '...'}</p>
             <p className="mt-4 text-gray-500">Catégorie: {project.categorie}</p>
-            <p className="mt-2">Montant: {project.montant}</p>
+            <p className="mt-2">Objectif: <strong>{project.montant + ' CFA'} </strong> </p>
+            <p className="mt-2">collecte: <strong>{project.receuilli + ' CFA'} </strong> </p>
             <div className="mt-4">
-              <button
+              <Button
                 onClick={() => fairedon(project)}
-                className="bg-blue-500 text-white rounded-md px-4 py-2"
+                variant={'ghost'}
                 type="submit"
               >
-                faire un don
-              </button>
+              <Faire_donModal/>
+              </Button>
             </div>
-          </div>
+          </Box>
         ))}
       </div>
 
-      <Modal
+      {/* <Modal
         isOpen={showModal}
         onRequestClose={() => setShowModal(false)}
         contentLabel="Faire un don"
@@ -184,7 +191,7 @@ const Mycomponents = (props) => {
             Valider le don
           </button>
         </Form>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
