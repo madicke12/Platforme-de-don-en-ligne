@@ -4,14 +4,34 @@ import { myfunction } from '../../shared/passport'; // Adjust the path based on 
 // Initialize passport
 myfunction(passport);
 
-export async function handler(event, context) {
-  // Ensure only GET requests are allowed
-  if (event.httpMethod !== 'GET') {
+export async function handler(event) {
+  // Ensure only POST requests are allowed
+  if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
       body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
   }
+
+  // Parse the request body
+  const requestBody = JSON.parse(event.body);
+
+  // Create an Express-like request and response object
+  const req = {
+    method: 'POST',
+    body: requestBody,
+    headers: event.headers,
+    // ... add other properties as needed
+  };
+
+  const res = {
+    status: (code) => ({
+      send: (body) => ({
+        statusCode: code,
+        body: JSON.stringify(body),
+      }),
+    }),
+  };
 
   return new Promise((resolve, reject) => {
     passport.authenticate('local', (err, user, info) => {
@@ -23,16 +43,10 @@ export async function handler(event, context) {
       }
 
       if (user) {
-        resolve({
-          statusCode: 200,
-          body: JSON.stringify(true),
-        });
+        resolve(res.status(200).send(true));
       } else {
-        resolve({
-          statusCode: 200,
-          body: JSON.stringify(false),
-        });
+        resolve(res.status(200).send(false));
       }
-    })(event, context, () => {});
+    })(req, res, () => {});
   });
 }
