@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import mongoose from "mongoose";
 import { myfunction } from "./passport.js";
-import { Demande ,Donateur ,Projet ,Organisation ,Don ,Init} from "./shared/schema.js";
+import { Demande ,Donateur ,Projet ,Organisation ,Don ,Init} from "./schema.js";
 
 const pass = process.env["Mongo_password"];
 mongoose

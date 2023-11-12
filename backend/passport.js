@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs'
-import { Donateur } from "./shared/schema.js";
+import { Donateur } from "./schema.js";
 import { Strategy } from "passport-local";
-import { Organisation } from "./shared/schema.js";
-import { Admnin } from './shared/schema.js';
+import { Organisation } from "./schema.js";
 
 export function myfunction(passport) {
   passport.use(
